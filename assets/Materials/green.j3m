@@ -1,0 +1,10 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        Diffuse : 0.105882354 0.5568628 0.07058824 1.0
+        GlowColor : 0.85490197 0.09803922 0.09803922 1.0
+        Ambient : 0.6862745 0.13725491 0.13725491 1.0
+        DiffuseMap : "Materials/grass.png"
+     }
+    AdditionalRenderState {
+    }
+}
