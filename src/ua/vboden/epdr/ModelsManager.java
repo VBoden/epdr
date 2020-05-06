@@ -14,27 +14,25 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 
 public class ModelsManager {
-	
+
 	private Node rootNode;
 	private AssetManager assetManager;
 	private BulletAppState bulletAppState;
-	
 
 	public ModelsManager(Node rootNode, AssetManager assetManager, BulletAppState bulletAppState) {
 		this.rootNode = rootNode;
 		this.assetManager = assetManager;
 		this.bulletAppState = bulletAppState;
 	}
-	
 
 	public void addModels() {
 		for (int i = 0; i < 2; i++)
 			for (int j = 0; j < 2; j++)
 				addTree(i * 10, 0, j * 10);
-		
-			for (int i = 10; i < 12; i++)
-				for (int j = 10; j < 12; j++)
-					addLights(i * 10, 0, j * 10);
+
+		for (int i = 10; i < 12; i++)
+			for (int j = 10; j < 12; j++)
+				addLights(i * 10, 0, j * 10);
 
 		Box box1 = new Box(1, 1, 1);
 		Geometry blue = new Geometry("Box", box1);
@@ -64,38 +62,42 @@ public class ModelsManager {
 
 	private void addLights(int x, int y, int z) {
 //		Spatial ninja = assetManager.loadModel("Models/tree.j3o");
-		Spatial ninja = assetManager.loadModel("Models/lightsGreen.j3o");
+		Spatial lights = assetManager.loadModel("Models/lights.j3o");
 //		Material mat1 = assetManager.loadMaterial("Materials/Generated/tree1-Cylinder1.j3m");
 //		Material mat2 = assetManager.loadMaterial("Materials/Generated/tree1-Cone1.j3m");
 //		((com.jme3.scene.Node)ninja).getChild("Cylinder1").setMaterial(mat1);
 //		((com.jme3.scene.Node)ninja).getChild("Cone1").setMaterial(mat2);
 //		Spatial ninja = assetManager.loadModel("Models/tree2.blend");
-      ninja.scale(1.0f, 1.0f, 1.0f);
+		lights.scale(1.0f, 1.0f, 1.0f);
 //      ninja.rotate(0.0f, -3.0f, 0.0f);
-		ninja.setLocalTranslation(x, y, z);
-		rootNode.attachChild(ninja);
+		lights.setLocalTranslation(x, y, z);
+		addCollisionShape(lights);
+		rootNode.attachChild(lights);
 	}
 
 	private void addTree(int x, int y, int z) {
-		Spatial ninja = assetManager.loadModel("Models/tree.j3o");
+		Spatial tree = assetManager.loadModel("Models/tree.j3o");
 //		Material mat1 = assetManager.loadMaterial("Materials/Generated/tree1-Cylinder1.j3m");
 //		Material mat2 = assetManager.loadMaterial("Materials/Generated/tree1-Cone1.j3m");
 //		((com.jme3.scene.Node)ninja).getChild("Cylinder1").setMaterial(mat1);
 //		((com.jme3.scene.Node)ninja).getChild("Cone1").setMaterial(mat2);
 //		Spatial ninja = assetManager.loadModel("Models/tree2.blend");
-      ninja.scale(1.05f, 2.05f, 1.05f);
+		tree.scale(1.05f, 2.05f, 1.05f);
 //      ninja.rotate(0.0f, -3.0f, 0.0f);
-		ninja.setLocalTranslation(x, y, z);
-		
-		
+		tree.setLocalTranslation(x, y, z);
+
+		addCollisionShape(tree);
+
+		rootNode.attachChild(tree);
+	}
+
+	private void addCollisionShape(Spatial ninja) {
 		CollisionShape cubShape = CollisionShapeFactory.createMeshShape(ninja);
 		RigidBodyControl landscape2 = new RigidBodyControl(cubShape, 0);
 		ninja.addControl(landscape2);
 		bulletAppState.getPhysicsSpace().add(landscape2);
-		
-		rootNode.attachChild(ninja);
 	}
-	
+
 	private void addBox(int x, int y, int z) {
 		Box box1 = new Box(1, 1, 1);
 		Geometry blue = new Geometry("Box", box1);
