@@ -60,12 +60,22 @@ public class ModelsManager {
 				addBox(i * 10, 0, j * 10);
 	}
 
+	private void addBuilding(int x, int y, int z) {
+		Spatial lights = assetManager.loadModel("Models/building.j3o");
+		lights.scale(1.0f, 15.0f, 1.0f);
+//      ninja.rotate(0.0f, -3.0f, 0.0f);
+		lights.setLocalTranslation(x, y, z);
+		addCollisionShape(lights);
+		rootNode.attachChild(lights);
+	}
+	
+	
 	private void addLights(int x, int y, int z) {
 //		Spatial ninja = assetManager.loadModel("Models/tree.j3o");
 		Spatial lights = assetManager.loadModel("Models/lights.j3o");
-//		Material mat1 = assetManager.loadMaterial("Materials/Generated/tree1-Cylinder1.j3m");
+		Material greenOn = assetManager.loadMaterial("Materials/Generated/lights-green.j3m");
 //		Material mat2 = assetManager.loadMaterial("Materials/Generated/tree1-Cone1.j3m");
-//		((com.jme3.scene.Node)ninja).getChild("Cylinder1").setMaterial(mat1);
+		((com.jme3.scene.Node)lights).getChild("green").setMaterial(greenOn);
 //		((com.jme3.scene.Node)ninja).getChild("Cone1").setMaterial(mat2);
 //		Spatial ninja = assetManager.loadModel("Models/tree2.blend");
 		lights.scale(1.0f, 1.0f, 1.0f);
@@ -76,10 +86,10 @@ public class ModelsManager {
 	}
 
 	private void addTree(int x, int y, int z) {
-		Spatial tree = assetManager.loadModel("Models/tree.j3o");
-//		Material mat1 = assetManager.loadMaterial("Materials/Generated/tree1-Cylinder1.j3m");
+		Spatial tree = assetManager.loadModel("Models/tree-1.j3o");
+		Material mat1 = assetManager.loadMaterial("Materials/Generated/tree-leafs2-dif.j3m");
 //		Material mat2 = assetManager.loadMaterial("Materials/Generated/tree1-Cone1.j3m");
-//		((com.jme3.scene.Node)ninja).getChild("Cylinder1").setMaterial(mat1);
+		((com.jme3.scene.Node)tree).getChild("leafs").setMaterial(mat1);
 //		((com.jme3.scene.Node)ninja).getChild("Cone1").setMaterial(mat2);
 //		Spatial ninja = assetManager.loadModel("Models/tree2.blend");
 		tree.scale(1.05f, 2.05f, 1.05f);
