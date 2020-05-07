@@ -87,7 +87,7 @@ public class ModelsManager {
 
 	private void addTree(int x, int y, int z) {
 		Spatial tree = assetManager.loadModel("Models/tree-1.j3o");
-		Material mat1 = assetManager.loadMaterial("Materials/Generated/tree-leafs2-dif.j3m");
+		Material mat1 = assetManager.loadMaterial("Materials/Generated/tree-leafs2.j3m");
 //		Material mat2 = assetManager.loadMaterial("Materials/Generated/tree1-Cone1.j3m");
 		((com.jme3.scene.Node)tree).getChild("leafs").setMaterial(mat1);
 //		((com.jme3.scene.Node)ninja).getChild("Cone1").setMaterial(mat2);
