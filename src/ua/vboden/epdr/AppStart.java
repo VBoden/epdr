@@ -1,8 +1,11 @@
 package ua.vboden.epdr;
 
+import static ua.vboden.epdr.Constants.DOUBLE_SCALE;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +26,7 @@ import com.jme3.light.DirectionalLight;
 import com.jme3.light.PointLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.niftygui.NiftyJmeDisplay;
@@ -78,6 +82,7 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 	};
 
 	private Map<String, Float> keyValues = new HashMap<>();
+	private AppContext context = new AppContext();
 
 	private Spatial sceneModel;
 	private RigidBodyControl landscape;
@@ -88,8 +93,8 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 	private Vector3f walkDirection = new Vector3f();
 	private Vector3f camDir = new Vector3f();
 
-	private float angle = 0;
 	private ModelsManager modelsManager;
+	private float speed = 0f;
 
 	private Nifty nifty;
 
@@ -109,49 +114,55 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 	public void simpleInitApp() {
 		bulletAppState = new BulletAppState();
 		stateManager.attach(bulletAppState);
-		modelsManager = new ModelsManager(rootNode, assetManager, bulletAppState);
 
 		flyCam.setMoveSpeed(100);
 		flyCam.setEnabled(false);
 
 		setUpKeys();
 		setUpLight();
+		setUpScene();
+		setUpPlayer();
+		rotateCamera(-180);
 
-		sceneModel = assetManager.loadModel("Scenes/main.j3o");
-		sceneModel.setLocalScale(20f);
+		createScreenText();
+		
+		modelsManager = new ModelsManager(rootNode, assetManager, bulletAppState, context);
+		modelsManager.addModels();
+	}
 
-		CollisionShape sceneShape = CollisionShapeFactory.createMeshShape(sceneModel);
-		landscape = new RigidBodyControl(sceneShape, 0);
-		sceneModel.addControl(landscape);
-		sceneModel.setLocalScale(100);
-
+	private void setUpPlayer() {
 		CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f, 1);
 		player = new CharacterControl(capsuleShape, 0.05f);
 		player.setJumpSpeed(20);
 		player.setFallSpeed(30);
 
-		rootNode.attachChild(sceneModel);
-//        System.out.println(sceneModel.getLocalTranslation());
-//        rootNode.setLocalTranslation(-1000, -200000, 0);
 
 		bulletAppState.getPhysicsSpace().add(landscape);
 		bulletAppState.getPhysicsSpace().add(player);
 
 		player.setGravity(new Vector3f(0, -30f, 0));
-		player.setPhysicsLocation(new Vector3f(10, 10, 10));
+		player.setPhysicsLocation(new Vector3f(DOUBLE_SCALE, 10, 0));
 
 		cam.setLocation(player.getPhysicsLocation());
+	}
 
-		modelsManager.addModels();
+	private void setUpScene() {
+		sceneModel = assetManager.loadModel("Scenes/main.j3o");
+		sceneModel.setLocalScale(20f);
+		CollisionShape sceneShape = CollisionShapeFactory.createMeshShape(sceneModel);
+		landscape = new RigidBodyControl(sceneShape, 0);
+		sceneModel.addControl(landscape);
+		sceneModel.setLocalScale(100);
+		rootNode.attachChild(sceneModel);
+	}
 
+	private void createScreenText() {
 		BitmapFont myFont = assetManager.loadFont("Interface/Fonts/Academy3.fnt");
 		hudText = new BitmapText(myFont, false);
-//		BitmapText hudText = new BitmapText(guiFont, false);
-//		System.out.println(myFont.getCharSet().getCharacter(10).getChar());
-		hudText.setSize(myFont.getCharSet().getRenderedSize()); // font size
-		hudText.setColor(ColorRGBA.Blue); // font color
-		hudText.setText("Швидкість: " + speed + " км/год"); // the text
-		hudText.setLocalTranslation(300, hudText.getLineHeight() + 10, 0); // position
+		hudText.setSize(myFont.getCharSet().getRenderedSize());
+		hudText.setColor(ColorRGBA.Blue);
+		hudText.setText("Швидкість: " + speed + " км/год");
+		hudText.setLocalTranslation(300, hudText.getLineHeight() + 10, 0);
 		guiNode.attachChild(hudText);
 	}
 
@@ -182,13 +193,9 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 
 	private void rotateCamera(float degress) {
 		Quaternion rotation = cam.getRotation();
-		float[] angles = rotation.toAngles(null);
-		float angleRadians = (float) (degress * (Math.PI / 180.0));
-		angles[1] += angleRadians;
-		rotation.fromAngles(angles);
+		float angle = Utils.rotateByY(rotation, degress);
+		context.setAngle(angle);
 	}
-
-	private float speed = 0f;
 
 	@Override
 	public void simpleUpdate(float tpf) {
