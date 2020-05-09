@@ -1,5 +1,8 @@
 package ua.vboden.epdr;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -8,6 +11,11 @@ import java.util.Set;
 import com.jme3.math.Vector3f;
 
 public class RoadsCreator {
+
+	private static final int START_X = 0;
+	private static final int START_Y = 1;
+	private static final int END_X = 2;
+	private static final int END_Y = 3;
 
 	private AppContext context;
 
@@ -23,18 +31,30 @@ public class RoadsCreator {
 
 	private List<Road> getRoads() {
 		List<Road> roads = new ArrayList<>();
-		Road road = new Road(new Vector3f(1, 0, 1), new Vector3f(98, 0, 1));
-		road.setId(0);
-		roads.add(road);
-		road = new Road(new Vector3f(1, 0, 40), new Vector3f(98, 0, 40));
-		road.setId(1);
-		roads.add(road);
-		road = new Road(new Vector3f(1, 0, 1), new Vector3f(1, 0, 98));
-		road.setId(2);
-		roads.add(road);
-		road = new Road(new Vector3f(20, 0, 1), new Vector3f(20, 0, 98));
-		road.setId(3);
-		roads.add(road);
+		Road road;
+		int id = 0;
+		String filePath = "data/roads.csv";
+		try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+
+			String line;
+			boolean firstLine = true;
+			while ((line = br.readLine()) != null) {
+				if (line.startsWith("#") || firstLine) {
+					firstLine = false;
+					continue;
+				}
+				String[] roadData = line.split(",");
+				int[] data = new int[roadData.length];
+				for (int i = 0; i < roadData.length; i++)
+					data[i] = Integer.parseInt(roadData[i]);
+				road = new Road(new Vector3f(data[START_X], 0, data[START_Y]),
+						new Vector3f(data[END_X], 0, data[END_Y]));
+				road.setId(id++);
+				roads.add(road);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return roads;
 	}
 
