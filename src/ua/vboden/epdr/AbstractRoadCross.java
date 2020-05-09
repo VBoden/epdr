@@ -3,19 +3,30 @@ package ua.vboden.epdr;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.jme3.asset.AssetManager;
+import com.jme3.bullet.BulletAppState;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 
-public class AbstractRoadCross {
+public abstract class AbstractRoadCross {
 
 	private Vector3f coordinates;
 	private Set<Road> members;
 	private AppContext context;
+	private Node rootNode;
+	private AssetManager assetManager;
+	private BulletAppState bulletAppState;
 
 	public AbstractRoadCross(Vector3f coordinates, AppContext context) {
 		this.coordinates = coordinates;
 		this.context = context;
-		members = new HashSet<>();
+		this.rootNode = context.getRootNode();
+		this.assetManager = context.getAssetManager();
+		this.bulletAppState = context.getBulletAppState();
+		this.members = new HashSet<>();
 	}
+
+	public abstract void addControls();
 
 	public Vector3f getCoordinates() {
 		return coordinates;
@@ -86,5 +97,4 @@ public class AbstractRoadCross {
 	public String toString() {
 		return "AbstractRoadCross [coordinates=" + coordinates + "]";
 	}
-
 }

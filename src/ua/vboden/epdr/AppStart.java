@@ -126,7 +126,10 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 
 		createScreenText();
 		
-		modelsManager = new ModelsManager(rootNode, assetManager, bulletAppState, context);
+		context.setAssetManager(assetManager);
+		context.setRootNode(rootNode);
+		context.setBulletAppState(bulletAppState);
+		modelsManager = new ModelsManager(context);
 		modelsManager.addModels();
 	}
 
@@ -142,6 +145,8 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 
 		player.setGravity(new Vector3f(0, -30f, 0));
 		player.setPhysicsLocation(new Vector3f(DOUBLE_SCALE, 10, 0));
+//		player.setPhysicsLocation(new Vector3f(0, 10, 40));
+//		rotateCamera(180);
 
 		cam.setLocation(player.getPhysicsLocation());
 	}

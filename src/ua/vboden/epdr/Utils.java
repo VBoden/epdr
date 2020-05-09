@@ -1,8 +1,20 @@
 package ua.vboden.epdr;
 
+import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.math.Quaternion;
+import com.jme3.scene.Spatial;
 
 public class Utils {
+
+	public static void addCollisionShape(Spatial object, BulletAppState bulletAppState) {
+		CollisionShape cubShape = CollisionShapeFactory.createMeshShape(object);
+		RigidBodyControl landscape2 = new RigidBodyControl(cubShape, 0);
+		object.addControl(landscape2);
+		bulletAppState.getPhysicsSpace().add(landscape2);
+	}
 
 	public static float[] rotate(Quaternion currentRotation, float[] degress) {
 		float[] angles = currentRotation.toAngles(null);
@@ -23,7 +35,7 @@ public class Utils {
 	public static float rotateByY(Quaternion currentRotation, float degress) {
 		return rotateBy(currentRotation, degress, 1);
 	}
-	
+
 	public static float toRadians(float degress) {
 		return (float) (degress * (Math.PI / 180.0));
 	}
