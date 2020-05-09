@@ -28,6 +28,30 @@ public abstract class AbstractRoadCross {
 
 	public abstract void addControls();
 
+	public Node getRootNode() {
+		return rootNode;
+	}
+
+	public void setRootNode(Node rootNode) {
+		this.rootNode = rootNode;
+	}
+
+	public AssetManager getAssetManager() {
+		return assetManager;
+	}
+
+	public void setAssetManager(AssetManager assetManager) {
+		this.assetManager = assetManager;
+	}
+
+	public BulletAppState getBulletAppState() {
+		return bulletAppState;
+	}
+
+	public void setBulletAppState(BulletAppState bulletAppState) {
+		this.bulletAppState = bulletAppState;
+	}
+
 	public Vector3f getCoordinates() {
 		return coordinates;
 	}
@@ -47,7 +71,7 @@ public abstract class AbstractRoadCross {
 	public void setCoordinates(Vector3f coordinates) {
 		this.coordinates = coordinates;
 	}
-	
+
 	public void addMember(Road road) {
 		members.add(road);
 	}
