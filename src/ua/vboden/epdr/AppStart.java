@@ -107,6 +107,7 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 		settings2.put("Title", "eeee");
 		app.setSettings(settings2);
 		app.setDisplayStatView(false);
+		app.setDisplayFps(false);
 		app.start();
 	}
 

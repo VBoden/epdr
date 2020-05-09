@@ -7,9 +7,6 @@ import java.util.Random;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.collision.shapes.CollisionShape;
-import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.material.Material;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
@@ -74,9 +71,8 @@ public class ModelsManager {
 						addRoadSquare((i - road.getXMult() - road.getZMult()) * DOUBLE_SCALE,
 								(j - road.getZMult() + road.getXMult()) * DOUBLE_SCALE, roadSideMaterial,
 								rotateDegrees);
-					} else if (isRoadCrossPoint(i + road.getXMult(), j + road.getZMult(), road)) {
-						roadMaterial = roadWithoutMarking;
-					} else if (isRoadCrossPoint(i - road.getXMult(), j - road.getZMult(), road)) {
+					} else if (isRoadCrossPoint(i + road.getXMult(), j + road.getZMult(), road)
+							|| isRoadCrossPoint(i - road.getXMult(), j - road.getZMult(), road)) {
 						roadMaterial = roadWithoutMarking;
 					} else {
 						roadMaterial = roadWithDashedMarking;
