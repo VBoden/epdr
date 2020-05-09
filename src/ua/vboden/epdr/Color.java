@@ -1,16 +1,16 @@
 package ua.vboden.epdr;
 
 public enum Color {
-	GREEN(0), RED(1), YELLOW(2);
+	GREEN("green"), RED("red"), YELLOW("yellow");
 
-	private int nodePosition;
+	private String nodeName;
 
-	private Color(int nodePosition) {
-		this.nodePosition = nodePosition;
+	private Color(String nodeName) {
+		this.nodeName = nodeName;
 	}
 
-	public int getNodePosition() {
-		return nodePosition;
+	public String getNodeName() {
+		return nodeName;
 	}
 
 }
