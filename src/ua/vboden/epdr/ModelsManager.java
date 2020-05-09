@@ -107,133 +107,8 @@ public class ModelsManager {
 		blue.getLocalTranslation().addLocal(-x * scale.x, 0, z * scale.y);
 	}
 
-	private void addRoadSquare_0(int x, int z, Material material, int rotate) {
-		Node node = new Node();
-		node.setLocalRotation(new Quaternion().fromAngles(-FastMath.HALF_PI, 0, 0));
-		node.getLocalTranslation().addLocal(0, 0.01f, 0);
-		Quad quad = new Quad(1, 1);
-		Geometry blue = new Geometry("Quad", quad);
-		blue.setLocalScale(10, 10, 1);
-		blue.getLocalRotation().addLocal(new Quaternion().fromAngles(0, 0, Utils.toRadians(2 * rotate)));
-		correctAfterRotation_0(blue, rotate);
-		blue.getLocalTranslation().addLocal(x, z, 0);
-		blue.setMaterial(material);
-		node.attachChild(blue);
-		rootNode.attachChild(node);
-	}
-
-	private void correctAfterRotation_0(Geometry blue, int rotate) {
-		int quaterMiddle = -rotate + 45;
-		float x = (float) Math.min(0, Math.signum(Math.sin(Utils.toRadians(quaterMiddle))));
-		float z = (float) Math.min(0, Math.signum(Math.cos(Utils.toRadians(quaterMiddle))));
-		Vector3f scale = blue.getLocalScale();
-		blue.getLocalTranslation().addLocal(-x * scale.x, -z * scale.y, 0);
-	}
-
-	public void createRoads0() {
-		RoadsCreator creator = new RoadsCreator(context);
-		creator.createRoads();
-
-		Material roadWithoutMarking = assetManager.loadMaterial("Materials/green.j3m");
-		roadWithoutMarking.setTexture("DiffuseMap", assetManager.loadTexture("Materials/RoadEmpty.png"));
-		Material roadWithSide = assetManager.loadMaterial("Materials/green.j3m");
-		roadWithSide.setTexture("DiffuseMap", assetManager.loadTexture("Materials/RoadSide.png"));
-		Material roadWithCrossSideX = assetManager.loadMaterial("Materials/green.j3m");
-		roadWithCrossSideX.setTexture("DiffuseMap", assetManager.loadTexture("Materials/RoadCrossSideX.png"));
-		Material roadWithCrossSideZ = assetManager.loadMaterial("Materials/green.j3m");
-		roadWithCrossSideZ.setTexture("DiffuseMap", assetManager.loadTexture("Materials/RoadCrossSideZ.png"));
-		Material roadWithDashedMarking = assetManager.loadMaterial("Materials/green.j3m");
-		roadWithDashedMarking.setTexture("DiffuseMap", assetManager.loadTexture("Materials/RoadDashed.png"));
-		for (Road road : context.getRoads()) {
-			if (road.isDirectedByZ())
-				continue;
-			int rotateDegrees = road.getXMult() * 90;
-			int sideRotateDegrees = road.getXMult() * 180;
-			int sideRotateDegrees2 = road.getZMult() * 180;
-			for (int i = (int) road.getStart().x; i < road.getEnd().x + 1; i++) {
-				for (int j = (int) road.getStart().z; j < road.getEnd().z + 1; j++) {
-					Material roadMaterial;
-					Material roadSideMaterial = null;
-					if (isRoadCrossPoint(i, j, road)) {
-						roadMaterial = roadWithoutMarking;
-//						continue;
-//						roadSideMaterial = roadWithCrossSide;
-					} else if (isRoadCrossPoint(i + road.getXMult(), j + road.getZMult(), road)
-							|| isRoadCrossPoint(i - road.getXMult(), j - road.getZMult(), road)) {
-						roadMaterial = roadWithoutMarking;
-//						continue;
-//						if(road.isDirectedByZ()) {
-//						roadSideMaterial = roadWithCrossSideZ;
-//						sideRotateDegrees2 = -180;
-//						}
-//						else
-						roadSideMaterial = roadWithCrossSideX;
-						sideRotateDegrees2 = 90;
-					} else {
-						roadMaterial = roadWithDashedMarking;
-						roadSideMaterial = roadWithSide;
-					}
-					addRoadSquare((i - road.getZMult()) * DOUBLE_SCALE, j * DOUBLE_SCALE, roadMaterial, rotateDegrees);
-					if (roadSideMaterial == null)
-						continue;
-					addRoadSquare((i + road.getZMult()) * DOUBLE_SCALE,
-							(j - road.getZMult() + road.getXMult()) * DOUBLE_SCALE, roadSideMaterial,
-							rotateDegrees - sideRotateDegrees2);
-					addRoadSquare((i - road.getXMult() - 2 * road.getZMult()) * DOUBLE_SCALE,
-							(j - road.getXMult() - road.getXMult()) * DOUBLE_SCALE, roadSideMaterial,
-							rotateDegrees + sideRotateDegrees);
-
-//					if (isRoadCrossPoint(i, j, road) || isRoadCrossPoint(i + road.getXMult(), j + road.getZMult(), road)
-//							|| isRoadCrossPoint(i - road.getXMult(), j - road.getZMult(), road)) {
-//						addRoadSquare((i - road.getZMult()) * DOUBLE_SCALE, j * DOUBLE_SCALE, roadWithoutMarking,
-//								rotateDegrees);
-//						addRoadSquare((i + road.getZMult()) * DOUBLE_SCALE, (j + road.getXMult()) * DOUBLE_SCALE,
-//								roadWithCrossSide, rotateDegrees - road.getZMult() * 180);
-//						addRoadSquare((i - road.getZMult() - road.getZMult()) * DOUBLE_SCALE,
-//								(j - road.getXMult() - road.getXMult()) * DOUBLE_SCALE, roadWithCrossSide,
-//								rotateDegrees + road.getXMult() * 180);
-//					} else {
-//						addRoadSquare((i - road.getZMult()) * DOUBLE_SCALE, j * DOUBLE_SCALE, roadWithDashedMarking,
-//								rotateDegrees);
-//						addRoadSquare((i + road.getZMult()) * DOUBLE_SCALE, (j + road.getXMult()) * DOUBLE_SCALE,
-//								roadWithSide, rotateDegrees - road.getZMult() * 180);
-//						addRoadSquare((i - road.getZMult() - road.getZMult()) * DOUBLE_SCALE,
-//								(j - road.getXMult() - road.getXMult()) * DOUBLE_SCALE, roadWithSide,
-//								rotateDegrees + road.getXMult() * 180);
-//					}
-				}
-			}
-		}
-//            y_rot_ind = road.get_y_bool()
-//            x_rot_ind = road.get_x_bool()
-
-//                    if self.is_road_cross_point(i, j, road) \
-//                            or self.is_road_cross_point(i + x_rot_ind, j + y_rot_ind, road) \
-//                            or self.is_road_cross_point(i - x_rot_ind, j - y_rot_ind, road):
-//                        self.add(roads_cross_model, i * mult, j * mult)
-//                    else:
-//                        self.add(road_central_model, i * mult, j * mult, rotate)
-//                        self.add_building_or_tree((i + (y_rot_ind * 2)) * mult, (j + (x_rot_ind * 2)) * mult,
-//                                                  random.randint(0, 9) > 6)
-//                        self.add_building_or_tree((i - (y_rot_ind * 2)) * mult, (j - (x_rot_ind * 2)) * mult,
-//                                                  random.randint(0, 9) > 6)
-//                    self.add(road_side_model, (i + y_rot_ind) * mult, (j + x_rot_ind) * mult, rotate - y_rot_ind * 180)
-//                    self.add(road_side_model, (i - y_rot_ind) * mult, (j - x_rot_ind) * mult, rotate - x_rot_ind * 180)
-	}
-
 	private boolean isRoadCrossPoint(int x, int z, Road road) {
 		return road.getCrossPoints().contains(road.toRoadPoint(x, z));
-	}
-
-	private void addRoadSquare0(int x, int z, Material material, int rotate) {
-		Quad quad = new Quad(1, 1);
-		Geometry blue = new Geometry("Quad", quad);
-		blue.setLocalScale(10, 10, 1);
-		blue.setLocalRotation(new Quaternion().fromAngles(-FastMath.HALF_PI, Utils.toRadians(rotate), 0));
-		correctAfterRotation(blue, rotate);
-		blue.getLocalTranslation().addLocal(x, 0.1f, z);
-		blue.setMaterial(material);
-		rootNode.attachChild(blue);
 	}
 
 	public void addModels0() {
@@ -266,9 +141,6 @@ public class ModelsManager {
 		mat1.setTexture("DiffuseMap", assetManager.loadTexture("Materials/estrada.jpg"));
 		blue.setMaterial(mat1);
 		rootNode.attachChild(blue);
-		for (int i = 0; i < 100; i++)
-			for (int j = 0; j < 100; j++)
-				addRoadSquare0(i * 10, j * 10);
 	}
 
 	private void addBuilding(int x, int y, int z) {
@@ -316,19 +188,6 @@ public class ModelsManager {
 		RigidBodyControl landscape2 = new RigidBodyControl(cubShape, 0);
 		ninja.addControl(landscape2);
 		bulletAppState.getPhysicsSpace().add(landscape2);
-	}
-
-	private void addRoadSquare0(int x, int z) {
-		Quad quad = new Quad(1, 1);
-		Geometry blue = new Geometry("Quad", quad);
-		blue.setLocalTranslation(new Vector3f(x, 0.1f, z));
-		blue.setLocalScale(9, 10, 1);
-//		blue.setLocalRotation(new Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X));
-		blue.setLocalRotation(new Quaternion().fromAngles(-FastMath.HALF_PI, 0, 0));
-		Material mat1 = assetManager.loadMaterial("Materials/green.j3m");
-		mat1.setTexture("DiffuseMap", assetManager.loadTexture("Materials/estrada.jpg"));
-		blue.setMaterial(mat1);
-		rootNode.attachChild(blue);
 	}
 
 }
