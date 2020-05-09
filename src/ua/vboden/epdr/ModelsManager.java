@@ -1,6 +1,9 @@
 package ua.vboden.epdr;
 
 import static ua.vboden.epdr.Constants.DOUBLE_SCALE;
+import static ua.vboden.epdr.Constants.SCALE;
+
+import java.util.Random;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
@@ -23,6 +26,7 @@ public class ModelsManager {
 	private AssetManager assetManager;
 	private BulletAppState bulletAppState;
 	private AppContext context;
+	private Random rand = new Random();
 
 	public ModelsManager(Node rootNode, AssetManager assetManager, BulletAppState bulletAppState, AppContext context) {
 		this.rootNode = rootNode;
@@ -81,6 +85,10 @@ public class ModelsManager {
 								roadSideMaterial, rotateDegrees - sideRotateDegrees0);
 						addRoadSquare((i - road.getZMult()) * DOUBLE_SCALE, (j + road.getXMult()) * DOUBLE_SCALE,
 								roadSideMaterial, rotateDegrees);
+						addBuildingOrTree((i + road.getZMult() * 2) * DOUBLE_SCALE,
+								(j + road.getXMult() * 2) * DOUBLE_SCALE);
+						addBuildingOrTree((i - road.getZMult() * 2) * DOUBLE_SCALE,
+								(j - road.getXMult() * 2) * DOUBLE_SCALE);
 					}
 					addRoadSquare(i * DOUBLE_SCALE, j * DOUBLE_SCALE, roadMaterial, rotateDegrees);
 				}
@@ -143,13 +151,45 @@ public class ModelsManager {
 		rootNode.attachChild(blue);
 	}
 
+	private void addBuildingOrTree(int x, int z) {
+		if (rand.nextInt(10) > 6)
+			addTree(x, 0, z);
+		else
+			addBuilding(x, 0, z);
+	}
+
 	private void addBuilding(int x, int y, int z) {
-		Spatial lights = assetManager.loadModel("Models/building.j3o");
-		lights.scale(1.0f, 15.0f, 1.0f);
-//      ninja.rotate(0.0f, -3.0f, 0.0f);
-		lights.setLocalTranslation(x, y, z);
-		addCollisionShape(lights);
-		rootNode.attachChild(lights);
+		Spatial building = assetManager.loadModel("Models/building.j3o");
+		int height = 5 + rand.nextInt(20);
+		Vector3f scale = new Vector3f(SCALE, height, SCALE);
+		Vector3f translation = new Vector3f(x, y, z);
+		addModel(building, scale, translation);
+	}
+
+	private void addTree(int x, int y, int z) {
+		Spatial tree = assetManager.loadModel("Models/tree-1.j3o");
+		Vector3f scale = new Vector3f(1.05f, 2.05f, 1.05f);
+		x += -SCALE + 2 + rand.nextInt(2 * SCALE - 2);
+		z += -SCALE + 2 + rand.nextInt(2 * SCALE - 2);
+		Vector3f translation = new Vector3f(x, y, z);
+		addModel(tree, scale, translation);
+	}
+
+	private void addModel(Spatial model, Vector3f scale, Vector3f translation) {
+		model.setLocalScale(scale);
+		translation.x += SCALE;
+		translation.z -= SCALE;
+		model.setLocalTranslation(translation);
+		addCollisionShape(model);
+
+		rootNode.attachChild(model);
+	}
+
+	private void addCollisionShape(Spatial object) {
+		CollisionShape cubShape = CollisionShapeFactory.createMeshShape(object);
+		RigidBodyControl landscape2 = new RigidBodyControl(cubShape, 0);
+		object.addControl(landscape2);
+		bulletAppState.getPhysicsSpace().add(landscape2);
 	}
 
 	private void addLights(int x, int y, int z) {
@@ -165,29 +205,6 @@ public class ModelsManager {
 		lights.setLocalTranslation(x, y, z);
 		addCollisionShape(lights);
 		rootNode.attachChild(lights);
-	}
-
-	private void addTree(int x, int y, int z) {
-		Spatial tree = assetManager.loadModel("Models/tree-1.j3o");
-		Material mat1 = assetManager.loadMaterial("Materials/Generated/tree-leafs2.j3m");
-//		Material mat2 = assetManager.loadMaterial("Materials/Generated/tree1-Cone1.j3m");
-		((com.jme3.scene.Node) tree).getChild("leafs").setMaterial(mat1);
-//		((com.jme3.scene.Node)ninja).getChild("Cone1").setMaterial(mat2);
-//		Spatial ninja = assetManager.loadModel("Models/tree2.blend");
-		tree.scale(1.05f, 2.05f, 1.05f);
-//      ninja.rotate(0.0f, -3.0f, 0.0f);
-		tree.setLocalTranslation(x, y, z);
-
-		addCollisionShape(tree);
-
-		rootNode.attachChild(tree);
-	}
-
-	private void addCollisionShape(Spatial ninja) {
-		CollisionShape cubShape = CollisionShapeFactory.createMeshShape(ninja);
-		RigidBodyControl landscape2 = new RigidBodyControl(cubShape, 0);
-		ninja.addControl(landscape2);
-		bulletAppState.getPhysicsSpace().add(landscape2);
 	}
 
 }
