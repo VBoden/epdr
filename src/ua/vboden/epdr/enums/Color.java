@@ -1,4 +1,4 @@
-package ua.vboden.epdr;
+package ua.vboden.epdr.enums;
 
 public enum Color {
 	GREEN("green"), RED("red"), YELLOW("yellow");

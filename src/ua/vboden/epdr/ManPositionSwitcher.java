@@ -1,10 +1,10 @@
 package ua.vboden.epdr;
 
-import static ua.vboden.epdr.StickPosition.BEFORE;
-import static ua.vboden.epdr.StickPosition.DOWN;
-import static ua.vboden.epdr.StickPosition.FORWARD;
-import static ua.vboden.epdr.StickPosition.SIDE;
-import static ua.vboden.epdr.StickPosition.UP;
+import static ua.vboden.epdr.enums.StickPosition.BEFORE;
+import static ua.vboden.epdr.enums.StickPosition.DOWN;
+import static ua.vboden.epdr.enums.StickPosition.FORWARD;
+import static ua.vboden.epdr.enums.StickPosition.SIDE;
+import static ua.vboden.epdr.enums.StickPosition.UP;
 import static ua.vboden.epdr.Utils.toRadians;
 
 import java.util.HashMap;
@@ -16,6 +16,9 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+
+import ua.vboden.epdr.enums.Direction;
+import ua.vboden.epdr.enums.StickPosition;
 
 public class ManPositionSwitcher implements Runnable {
 

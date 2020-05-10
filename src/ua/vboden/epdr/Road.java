@@ -1,6 +1,6 @@
 package ua.vboden.epdr;
 
-import static ua.vboden.epdr.Direction.*;
+import static ua.vboden.epdr.enums.Direction.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.jme3.math.Vector3f;
+
+import ua.vboden.epdr.enums.Direction;
 
 public class Road {
 

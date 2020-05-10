@@ -2,6 +2,8 @@ package ua.vboden.epdr;
 
 import com.jme3.scene.Spatial;
 
+import ua.vboden.epdr.enums.Color;
+
 public class TrafficLishts {
 
 	private Spatial lights;

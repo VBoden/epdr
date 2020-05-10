@@ -4,6 +4,8 @@ import static ua.vboden.epdr.Constants.DOUBLE_SCALE;
 
 import com.jme3.math.Vector3f;
 
+import ua.vboden.epdr.enums.Direction;
+
 public class MovingManager {
 
 	private AppContext context;

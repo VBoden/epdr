@@ -2,6 +2,9 @@ package ua.vboden.epdr;
 
 import com.jme3.scene.Spatial;
 
+import ua.vboden.epdr.enums.Direction;
+import ua.vboden.epdr.enums.StickPosition;
+
 public class TrafficMan {
 
 	private Spatial manModel;

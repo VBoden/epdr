@@ -1,12 +1,12 @@
 package ua.vboden.epdr;
 
-import static ua.vboden.epdr.Color.YELLOW;
+import static ua.vboden.epdr.enums.Color.YELLOW;
 import static ua.vboden.epdr.Constants.DOUBLE_SCALE;
 import static ua.vboden.epdr.Constants.SCALE;
-import static ua.vboden.epdr.Direction.E;
-import static ua.vboden.epdr.Direction.N;
-import static ua.vboden.epdr.Direction.S;
-import static ua.vboden.epdr.Direction.W;
+import static ua.vboden.epdr.enums.Direction.E;
+import static ua.vboden.epdr.enums.Direction.N;
+import static ua.vboden.epdr.enums.Direction.S;
+import static ua.vboden.epdr.enums.Direction.W;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +16,9 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+
+import ua.vboden.epdr.enums.Color;
+import ua.vboden.epdr.enums.Direction;
 
 public class RoadCrossWithLights extends AbstractRoadCross {
 

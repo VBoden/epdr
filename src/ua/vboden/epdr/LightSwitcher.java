@@ -1,6 +1,8 @@
 package ua.vboden.epdr;
 
-import static ua.vboden.epdr.Color.*;
+import static ua.vboden.epdr.enums.Color.GREEN;
+import static ua.vboden.epdr.enums.Color.RED;
+import static ua.vboden.epdr.enums.Color.YELLOW;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +13,8 @@ import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+
+import ua.vboden.epdr.enums.Color;
 
 public class LightSwitcher implements Runnable {
 
