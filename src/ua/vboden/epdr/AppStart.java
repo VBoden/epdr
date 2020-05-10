@@ -96,6 +96,7 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 	private Vector3f camDir = new Vector3f();
 
 	private ModelsManager modelsManager;
+	private MovingManager movingManager;
 	private float speed = 0f;
 	private boolean correctedDirection;
 
@@ -133,8 +134,11 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 		context.setAssetManager(assetManager);
 		context.setRootNode(rootNode);
 		context.setBulletAppState(bulletAppState);
+		context.setPlayer(player);
+		context.setCam(cam);
 		modelsManager = new ModelsManager(context);
 		modelsManager.addModels();
+		movingManager = new MovingManager(context);
 	}
 
 	private void setUpPlayer() {
@@ -147,9 +151,9 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 		bulletAppState.getPhysicsSpace().add(player);
 
 		player.setGravity(new Vector3f(0, -30f, 0));
-		player.setPhysicsLocation(new Vector3f(DOUBLE_SCALE, 10, 0));
-//		player.setPhysicsLocation(new Vector3f(0, 10, 40));
-//		rotateCamera(180);
+//		player.setPhysicsLocation(new Vector3f(DOUBLE_SCALE, 10, 0));
+		player.setPhysicsLocation(new Vector3f(15 * DOUBLE_SCALE, 10, 20 * DOUBLE_SCALE));
+		rotateCamera(90);
 
 		cam.setLocation(player.getPhysicsLocation());
 	}
@@ -199,14 +203,17 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 		keyValues.put(keyName, value);
 	}
 
+	int counter = 0;
+
 	@Override
 	public void simpleUpdate(float tpf) {
-		speed += 0.02 * (keyValues.get(KEY_UP) - keyValues.get(KEY_DOWN));
+		speed = (float) (context.getSpeed() + 0.02 * (keyValues.get(KEY_UP) - keyValues.get(KEY_DOWN)));
 		if (speed < 0)
 			speed = 0;
 		if (keyValues.get(KEY_S) > 0) {
 			speed = new BigDecimal(speed * 0.9f).setScale(2, BigDecimal.ROUND_DOWN).floatValue();
 		}
+		context.setSpeed(speed);
 
 		DecimalFormat df = new DecimalFormat("#.#");
 		df.setRoundingMode(RoundingMode.CEILING);
@@ -230,6 +237,9 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 
 		player.setWalkDirection(walkDirection);
 		cam.setLocation(player.getPhysicsLocation());
+		if (counter % 10 == 0)
+			movingManager.manage(player.getPhysicsLocation());
+		counter++;
 	}
 
 	private void rotateCamera(float degress) {
@@ -240,10 +250,7 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 
 	private void correcteMovingAngle() {
 		float currentDegress = context.getAngleDegress();
-		if (currentDegress >= 360)
-			currentDegress -= 360;
-		else if (currentDegress < 0)
-			currentDegress += 360;
+		currentDegress = Utils.correctAngleRange(currentDegress);
 		float turnKeyValues = keyValues.get(KEY_LEFT) + keyValues.get(KEY_RIGHT);
 		if (turnKeyValues == 0) {
 			float diff = currentDegress % 90;

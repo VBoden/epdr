@@ -5,6 +5,8 @@ import java.util.Set;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.control.CharacterControl;
+import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 
 public class AppContext {
@@ -12,9 +14,13 @@ public class AppContext {
 	private Node rootNode;
 	private AssetManager assetManager;
 	private BulletAppState bulletAppState;
+	private CharacterControl player;
+	protected Camera cam;
 	private List<Road> roads;
 	private Set<AbstractRoadCross> roadCrosses;
 	private float angle = 0;
+	private float speed = 0f;
+	private AbstractRoadCross passedCross;
 
 	public Node getRootNode() {
 		return rootNode;
@@ -53,7 +59,7 @@ public class AppContext {
 	}
 
 	public float getAngleDegress() {
-		return Utils.toDegress(angle);
+		return Utils.correctAngleRange(Utils.toDegress(angle));
 	}
 
 	public void setAngle(float angle) {
@@ -66,6 +72,38 @@ public class AppContext {
 
 	public void setRoadCrosses(Set<AbstractRoadCross> roadCrosses) {
 		this.roadCrosses = roadCrosses;
+	}
+
+	public AbstractRoadCross getPassedCross() {
+		return passedCross;
+	}
+
+	public void setPassedCross(AbstractRoadCross passedCross) {
+		this.passedCross = passedCross;
+	}
+
+	public CharacterControl getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(CharacterControl player) {
+		this.player = player;
+	}
+
+	public Camera getCam() {
+		return cam;
+	}
+
+	public void setCam(Camera cam) {
+		this.cam = cam;
+	}
+
+	public float getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(float speed) {
+		this.speed = speed;
 	}
 
 }

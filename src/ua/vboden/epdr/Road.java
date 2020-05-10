@@ -1,5 +1,7 @@
 package ua.vboden.epdr;
 
+import static ua.vboden.epdr.Direction.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,8 +37,8 @@ public class Road {
 	}
 
 	public boolean hasPoint(float x, float z) {
-		return !isDirectedByZ() && z == start.z && isBetween(x, start.x, end.x) || isDirectedByZ() && x == start.x
-				&& isBetween(z, start.z, end.z);
+		return !isDirectedByZ() && z == start.z && isBetween(x, start.x, end.x)
+				|| isDirectedByZ() && x == start.x && isBetween(z, start.z, end.z);
 	}
 
 	private boolean isBetween(float value, float start, float end) {
@@ -47,6 +49,29 @@ public class Road {
 
 	public int toRoadPoint(int x, int z) {
 		return isDirectedByZ() ? z : x;
+	}
+
+	public AbstractRoadCross getNearestCross(int x, int z, Direction direction) {
+		int point = toRoadPoint(x, z);
+		System.out.println("road point=" + point);
+		int index = 0;
+		int inc = 1;
+		int endIndex = crossPoints.size();
+		if (S == direction || E == direction) {
+			index = crossPoints.size() - 1;
+			inc = -1;
+			endIndex = -1;
+		}
+		while (index != endIndex) {
+			Integer crossPosition = crossPoints.get(index);
+			if (-inc * (point - crossPosition) > 0) {
+				System.out.println(crossPosition);
+//				System.out.println(crosses.get(crossPosition));
+				return crosses.get(crossPosition);
+			}
+			index += inc;
+		}
+		return null;
 	}
 
 	public void addCrossPoint(int coordinate) {

@@ -40,4 +40,32 @@ public class Utils {
 		return (float) (degress * (Math.PI / 180.0));
 	}
 
+	public static float toDegress(float radians) {
+		return (float) (radians * 180.0 / Math.PI);
+	}
+
+	public static float getZMoveSign(float radians) {
+		return (float) Math.round(Math.cos(radians));
+	}
+
+	public static float getXMoveSign(float radians) {
+		return (float) Math.round(Math.sin(radians));
+	}
+
+	public static float getZMoveSignDeg(float degress) {
+		return getZMoveSign(toRadians(degress));
+	}
+
+	public static float getXMoveSignDeg(float degress) {
+		return getXMoveSign(toRadians(degress));
+	}
+
+	public static float correctAngleRange(float currentDegress) {
+		if (currentDegress >= 360)
+			currentDegress -= 360;
+		else if (currentDegress < 0)
+			currentDegress += 360;
+		return currentDegress;
+	}
+
 }

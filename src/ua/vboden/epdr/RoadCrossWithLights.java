@@ -10,6 +10,7 @@ import static ua.vboden.epdr.Direction.W;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import com.jme3.material.Material;
 import com.jme3.math.Quaternion;
@@ -20,25 +21,21 @@ import com.jme3.scene.Spatial;
 public class RoadCrossWithLights extends AbstractRoadCross {
 
 	private Map<Direction, TrafficLishts> lights = new HashMap<>();
+	private Color seenColor;
 
 	public RoadCrossWithLights(Vector3f coordinates, AppContext context) {
 		super(coordinates, context);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void addControls() {
 		int roadMove = 2 * DOUBLE_SCALE;
 		int sideMove = 2;
-//		        line_center_move = ROAD_SCALE
-//		        self.lights[Direction.N].road_point = self.calculate_map_point(1, -1, -line_center_move, road_move)
-//		        self.lights[Direction.S].road_point = self.calculate_map_point(-1, 1, -line_center_move, road_move)
-//		        self.lights[Direction.W].road_point = self.calculate_map_point(1, 1, road_move, -line_center_move)
-//		        self.lights[Direction.E].road_point = self.calculate_map_point(-1, -1, road_move, -line_center_move)
-		lights.put(N, addLights(1, 1, sideMove, roadMove, N.getDegress()));
-		lights.put(W, addLights(1, -1, roadMove, sideMove, W.getDegress()));
-		lights.put(S, addLights(-1, -1, sideMove, roadMove, S.getDegress()));
-		lights.put(E, addLights(-1, 1, roadMove, sideMove, E.getDegress()));
+		lights.put(S, addLights(1, 1, sideMove, roadMove, N.getDegress()));
+		lights.put(E, addLights(1, -1, roadMove, sideMove, W.getDegress()));
+		lights.put(N, addLights(-1, -1, sideMove, roadMove, S.getDegress()));
+		lights.put(W, addLights(-1, 1, roadMove, sideMove, E.getDegress()));
+		setupReturnPoints();
 	}
 
 	private TrafficLishts addLights(int xSign, int zSign, int dx, int dz, int degress) {
@@ -53,8 +50,36 @@ public class RoadCrossWithLights extends AbstractRoadCross {
 		Material yellowOn = getAssetManager().loadMaterial("Materials/Generated/lights-yellow.j3m");
 		((Node) lights).getChild(YELLOW.getNodeName()).setMaterial(yellowOn);
 		TrafficLishts traficLights = new TrafficLishts(lights);
-		new Thread(new LightSwitcher(traficLights, getAssetManager())).start();
+		Thread thread = new Thread(new LightSwitcher(traficLights, getAssetManager()));
+		thread.setDaemon(true);
+		thread.start();
 		return traficLights;
+	}
+
+	@Override
+	public Boolean passedCross(Direction direction, Road rememberedRoad, int x, int z) {
+		if (this.equals(getContext().getPassedCross()))
+			return null;
+		int xSign = (int) Utils.getXMoveSignDeg(direction.getDegress());
+		int zSign = (int) Utils.getZMoveSignDeg(direction.getDegress());
+		Vector3f position = lights.get(direction).getLights().getLocalTranslation();
+		int roadX = (int) (position.x / DOUBLE_SCALE);
+		int roadZ = (int) (position.z / DOUBLE_SCALE);
+		boolean passedLights = hasPassedLights(x, z, xSign, zSign, roadX, roadZ);
+		float toLightDist = 2;
+		System.out.printf("light: %d %d \n", roadX, roadZ);
+		boolean passedLightsSeenPoint = hasPassedLights(x + xSign * toLightDist, z + zSign * toLightDist, xSign, zSign,
+				roadX, roadZ);
+		if (!passedLights && !passedLightsSeenPoint)
+			seenColor = lights.get(direction).getColor();
+		System.out.println(seenColor + " " + passedLights + " " + passedLightsSeenPoint);
+		if (passedLights)
+			return Color.GREEN.equals(seenColor);
+		return null;
+	}
+
+	private boolean hasPassedLights(float x, float z, int xSign, int zSign, int roadX, int roadZ) {
+		return xSign * (x - roadX) + zSign * (z - roadZ) > 0;
 	}
 
 }
