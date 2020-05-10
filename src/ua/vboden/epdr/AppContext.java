@@ -52,8 +52,8 @@ public class AppContext {
 		return angle;
 	}
 
-	public int getAngleDegres() {
-		return (int) (angle * 180 / Math.PI);
+	public float getAngleDegress() {
+		return Utils.toDegress(angle);
 	}
 
 	public void setAngle(float angle) {

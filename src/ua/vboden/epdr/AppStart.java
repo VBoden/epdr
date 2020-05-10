@@ -53,6 +53,8 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 	private static final String KEY_UP = "arrow_up";
 	private static final String KEY_LEFT = "arrow_left";
 	private static final String KEY_RIGHT = "arrow_right";
+	private static final float TURN_SPEED_MULTIPLIER = 10;
+
 	private Map<String, Integer> keyNames = new HashMap<String, Integer>() {
 		{
 			put(KEY_D, KeyInput.KEY_D);
@@ -95,6 +97,7 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 
 	private ModelsManager modelsManager;
 	private float speed = 0f;
+	private boolean correctedDirection;
 
 	private Nifty nifty;
 
@@ -126,7 +129,7 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 		rotateCamera(-180);
 
 		createScreenText();
-		
+
 		context.setAssetManager(assetManager);
 		context.setRootNode(rootNode);
 		context.setBulletAppState(bulletAppState);
@@ -139,7 +142,6 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 		player = new CharacterControl(capsuleShape, 0.05f);
 		player.setJumpSpeed(20);
 		player.setFallSpeed(30);
-
 
 		bulletAppState.getPhysicsSpace().add(landscape);
 		bulletAppState.getPhysicsSpace().add(player);
@@ -197,12 +199,6 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 		keyValues.put(keyName, value);
 	}
 
-	private void rotateCamera(float degress) {
-		Quaternion rotation = cam.getRotation();
-		float angle = Utils.rotateByY(rotation, degress);
-		context.setAngle(angle);
-	}
-
 	@Override
 	public void simpleUpdate(float tpf) {
 		speed += 0.02 * (keyValues.get(KEY_UP) - keyValues.get(KEY_DOWN));
@@ -217,8 +213,13 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 		hudText.setText("Швидкість: " + df.format(100 * speed) + " км/год");
 
 		float angleDegrees = keyValues.get(KEY_LEFT) - keyValues.get(KEY_RIGHT);
-		if (angleDegrees != 0)
-			rotateCamera(5 * speed * angleDegrees);
+		if (angleDegrees != 0) {
+			rotateCamera(TURN_SPEED_MULTIPLIER * speed * angleDegrees);
+			correctedDirection = false;
+		} else if (!correctedDirection) {
+			correcteMovingAngle();
+			correctedDirection = true;
+		}
 
 		camDir.set(cam.getDirection()).multLocal(speed);
 		walkDirection.set(0, -20, 0);
@@ -229,6 +230,30 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 
 		player.setWalkDirection(walkDirection);
 		cam.setLocation(player.getPhysicsLocation());
+	}
+
+	private void rotateCamera(float degress) {
+		Quaternion rotation = cam.getRotation();
+		float angle = Utils.rotateByY(rotation, degress);
+		context.setAngle(angle);
+	}
+
+	private void correcteMovingAngle() {
+		float currentDegress = context.getAngleDegress();
+		if (currentDegress >= 360)
+			currentDegress -= 360;
+		else if (currentDegress < 0)
+			currentDegress += 360;
+		float turnKeyValues = keyValues.get(KEY_LEFT) + keyValues.get(KEY_RIGHT);
+		if (turnKeyValues == 0) {
+			float diff = currentDegress % 90;
+			float directionDelta = TURN_SPEED_MULTIPLIER / 2;
+			if (diff > 0 && diff < directionDelta) {
+				rotateCamera(-diff);
+			} else if (diff > 90 - directionDelta && diff < 90) {
+				rotateCamera(90 - diff);
+			}
+		}
 	}
 
 //    @Override
