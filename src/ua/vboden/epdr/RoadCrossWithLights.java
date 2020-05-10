@@ -49,7 +49,7 @@ public class RoadCrossWithLights extends AbstractRoadCross {
 		Material yellowOn = getAssetManager().loadMaterial("Materials/Generated/lights-yellow.j3m");
 		((Node) lights).getChild(YELLOW.getNodeName()).setMaterial(yellowOn);
 		TrafficLishts traficLights = new TrafficLishts(lights);
-		Thread thread = new Thread(new LightSwitcher(traficLights, getAssetManager()));
+		Thread thread = new Thread(new LightSwitcher(getContext().getMainApp(), traficLights, getAssetManager()));
 		thread.setDaemon(true);
 		thread.start();
 		return traficLights;

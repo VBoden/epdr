@@ -4,14 +4,17 @@ import static ua.vboden.epdr.Color.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 
 public class LightSwitcher implements Runnable {
 
+	private AppStart mainApp;
 	private TrafficLishts traficLights;
 	private Material greenOn;
 	private Material yellowOn;
@@ -23,7 +26,8 @@ public class LightSwitcher implements Runnable {
 	private Map<Color, Material> onMaterials;
 	private Map<Color, Material> offMaterials;
 
-	public LightSwitcher(TrafficLishts traficLights, AssetManager assetManager) {
+	public LightSwitcher(AppStart mainApp, TrafficLishts traficLights, AssetManager assetManager) {
+		this.mainApp = mainApp;
 		this.traficLights = traficLights;
 		greenOn = assetManager.loadMaterial("Materials/Generated/lights-green.j3m");
 		yellowOn = assetManager.loadMaterial("Materials/Generated/lights-yellow.j3m");
@@ -71,9 +75,16 @@ public class LightSwitcher implements Runnable {
 
 	private void switchColor(Color oldColor, Color newColor) {
 		traficLights.setColor(newColor);
-		Node lights = (Node) traficLights.getLights();
-		lights.getChild(oldColor.getNodeName()).setMaterial(offMaterials.get(oldColor));
-		lights.getChild(newColor.getNodeName()).setMaterial(onMaterials.get(newColor));
+		mainApp.enqueue(new Callable<Spatial>() {
+
+			@Override
+			public Spatial call() throws Exception {
+				Node lights = (Node) traficLights.getLights();
+				lights.getChild(oldColor.getNodeName()).setMaterial(offMaterials.get(oldColor));
+				lights.getChild(newColor.getNodeName()).setMaterial(onMaterials.get(newColor));
+				return lights;
+			}
+		});
 	}
 
 }

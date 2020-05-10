@@ -9,7 +9,6 @@ import static ua.vboden.epdr.Utils.toRadians;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -25,7 +24,6 @@ public class ManPositionSwitcher implements Runnable {
 	private int directionCounter;
 	private Direction[] directions = Direction.values();
 	private StickPosition[] samePosition = new StickPosition[] { DOWN, SIDE, BEFORE };
-
 	private Map<StickPosition, float[]> stickRotation;
 	private Map<StickPosition, Vector3f> stickTranslation;
 
@@ -53,25 +51,12 @@ public class ManPositionSwitcher implements Runnable {
 		};
 	}
 
-	// Down:
-	// Rot: (0,0,0) Trans: (-1.0, 0.5, 0.0)
-	// Up:
-	// Rot: (0,0,0) Trans: (-1.0, 4.5, 0.0)
-	// Forward:
-	// Rot: (90,0,0) Trans: (-1.0, 2.5, 0.0)
-	// Side:
-	// Rot: (0,0,90) Trans: (-1.0, 2.5, 0.0)
-	// Before:
-	// Rot: (0.0, 0.0, -90.0) Trans: (-1.0, 2.5, 0.5)
 	@Override
 	public void run() {
 		int oneSec = 1000;
-//		int greenTime = oneSec * ThreadLocalRandom.current().nextInt(20, 41);
-//		int redTime = oneSec * ThreadLocalRandom.current().nextInt(10, 21);
-//		int yellowTime = 5 * oneSec;
-		int greenTime = oneSec * ThreadLocalRandom.current().nextInt(2, 4);
-		int redTime = oneSec * ThreadLocalRandom.current().nextInt(1, 2);
-		int yellowTime = 2 * oneSec;
+		int greenTime = oneSec * ThreadLocalRandom.current().nextInt(20, 41);
+		int redTime = oneSec * ThreadLocalRandom.current().nextInt(10, 21);
+		int yellowTime = 5 * oneSec;
 		while (true) {
 			try {
 				Thread.sleep(yellowTime);
@@ -87,21 +72,24 @@ public class ManPositionSwitcher implements Runnable {
 				switchPosition(UP);
 				Direction direction = directions[directionCounter % directions.length];
 				directionCounter++;
-				System.out.println(direction);
-				mainApp.enqueue(new Callable<Spatial>() {
-
-					@Override
-					public Spatial call() throws Exception {
-						man.getManModel()
-								.setLocalRotation(new Quaternion().fromAngles(0, toRadians(direction.getDegress()), 0));
-						return man.getManModel();
-					}
-				});
+				rotateMan(direction);
 				man.setDirection(direction);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private void rotateMan(Direction direction) {
+		mainApp.enqueue(new Callable<Spatial>() {
+
+			@Override
+			public Spatial call() throws Exception {
+				man.getManModel()
+						.setLocalRotation(new Quaternion().fromAngles(0, toRadians(direction.getDegress()), 0));
+				return man.getManModel();
+			}
+		});
 	}
 
 	private void switchPosition(StickPosition newPosition) {

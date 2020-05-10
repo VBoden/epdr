@@ -20,16 +20,11 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 
 	public RoadCrossWithMan(Vector3f coordinates, AppContext context) {
 		super(coordinates, context);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void addControls() {
 		trafficMan = addLights(N.getDegress());
-//		lights.put(S, addLights(1, 1, sideMove, roadMove, N.getDegress()));
-//		lights.put(E, addLights(1, -1, roadMove, sideMove, W.getDegress()));
-//		lights.put(N, addLights(-1, -1, sideMove, roadMove, S.getDegress()));
-//		lights.put(W, addLights(-1, 1, roadMove, sideMove, E.getDegress()));
 		setupReturnPoints();
 	}
 
@@ -50,17 +45,6 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 		thread.start();
 		return trafficMan;
 	}
-
-	// Down:
-	// Rot: (0,0,0) Trans: (-1.0, 0.5, 0.0)
-	// Up:
-	// Rot: (0,0,0) Trans: (-1.0, 4.5, 0.0)
-	// Forward:
-	// Rot: (90,0,0) Trans: (-1.0, 2.5, 0.0)
-	// Side:
-	// Rot: (0,0,90) Trans: (-1.0, 2.5, 0.0)
-	// Before:
-	// Rot: (0.0, 0.0, -90.0) Trans: (-1.0, 2.5, 0.5)
 
 	@Override
 	public Boolean passedCross(Direction direction, Road rememberedRoad, int x, int z) {
