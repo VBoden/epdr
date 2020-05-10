@@ -140,8 +140,8 @@ public abstract class AbstractRoadCross {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+//		if (getClass() != obj.getClass())
+//			return false;
 		AbstractRoadCross other = (AbstractRoadCross) obj;
 		if (coordinates == null) {
 			if (other.coordinates != null)

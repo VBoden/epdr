@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import com.jme3.math.Vector3f;
@@ -69,7 +70,11 @@ public class RoadsCreator {
 						if (road2.hasPoint(i, j)) {
 							int crossPoint = road.toRoadPoint(i, j);
 							road.addCrossPoint(crossPoint);
-							AbstractRoadCross roadCross = new RoadCrossWithLights(new Vector3f(i, 0, j), context);
+							AbstractRoadCross roadCross;
+							if (new Random().nextInt(10) > 5)
+								roadCross = new RoadCrossWithMan(new Vector3f(i, 0, j), context);
+							else
+								roadCross = new RoadCrossWithLights(new Vector3f(i, 0, j), context);
 							for (AbstractRoadCross cross : roadCrosses)
 								if (cross.equals(roadCross)) {
 									roadCross = cross;

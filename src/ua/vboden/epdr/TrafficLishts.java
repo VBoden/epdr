@@ -6,7 +6,7 @@ public class TrafficLishts {
 
 	private Spatial lights;
 	private Color color;
-	private int roadPoint;
+//	private int roadPoint;
 
 	public TrafficLishts(Spatial lights) {
 		this.lights = lights;
@@ -28,12 +28,12 @@ public class TrafficLishts {
 		this.color = color;
 	}
 
-	public int getRoadPoint() {
-		return roadPoint;
-	}
-
-	public void setRoadPoint(int roadPoint) {
-		this.roadPoint = roadPoint;
-	}
+//	public int getRoadPoint() {
+//		return roadPoint;
+//	}
+//
+//	public void setRoadPoint(int roadPoint) {
+//		this.roadPoint = roadPoint;
+//	}
 
 }
