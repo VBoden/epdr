@@ -99,6 +99,7 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 	private MovingManager movingManager;
 	private float speed = 0f;
 	private boolean correctedDirection;
+	private int moveManagTriggerCounter = 0;
 
 	private Nifty nifty;
 
@@ -151,9 +152,9 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 		bulletAppState.getPhysicsSpace().add(player);
 
 		player.setGravity(new Vector3f(0, -30f, 0));
-//		player.setPhysicsLocation(new Vector3f(DOUBLE_SCALE, 10, 0));
-		player.setPhysicsLocation(new Vector3f(15 * DOUBLE_SCALE, 10, 20 * DOUBLE_SCALE));
-		rotateCamera(90);
+		player.setPhysicsLocation(new Vector3f(DOUBLE_SCALE, 10, 0));
+//		player.setPhysicsLocation(new Vector3f(15 * DOUBLE_SCALE, 10, 20 * DOUBLE_SCALE));
+//		rotateCamera(90);
 
 		cam.setLocation(player.getPhysicsLocation());
 	}
@@ -203,8 +204,6 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 		keyValues.put(keyName, value);
 	}
 
-	int counter = 0;
-
 	@Override
 	public void simpleUpdate(float tpf) {
 		speed = (float) (context.getSpeed() + 0.02 * (keyValues.get(KEY_UP) - keyValues.get(KEY_DOWN)));
@@ -237,9 +236,9 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 
 		player.setWalkDirection(walkDirection);
 		cam.setLocation(player.getPhysicsLocation());
-		if (counter % 10 == 0)
+		if (moveManagTriggerCounter % 10 == 0)
 			movingManager.manage(player.getPhysicsLocation());
-		counter++;
+		moveManagTriggerCounter++;
 	}
 
 	private void rotateCamera(float degress) {

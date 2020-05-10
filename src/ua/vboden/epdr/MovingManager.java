@@ -16,12 +16,10 @@ public class MovingManager {
 
 	public void manage(Vector3f currentPos) {
 		Direction currentDirection = findDirection();
-		System.out.printf("dir:%s\n", currentDirection);
 		if (currentDirection != null) {
 			rememberedDir = currentDirection;
 		}
 		Direction direction = rememberedDir;
-		System.out.println(currentPos);
 		int x = Math.round(currentPos.x / DOUBLE_SCALE);
 		int z = Math.round(currentPos.z / DOUBLE_SCALE);
 		if (Direction.E.equals(direction))
@@ -29,7 +27,6 @@ public class MovingManager {
 		if (Direction.S.equals(direction))
 			x -= 1;
 		Road road = findRoad(x, z);
-//		System.out.println("road=" + road + " direction=" + currentDirection);
 		if (road != null && currentDirection != null)
 			rememberedRoad = road;
 		if (rememberedRoad == null)
@@ -47,8 +44,8 @@ public class MovingManager {
 					float radians = Utils.toRadians(direction.getDegress());
 					context.cam.getRotation().fromAngles(0, radians, 0);
 					Vector3f onMap = cross.getPointOnMap(direction);
-					float x0 = onMap.x - Math.round(Math.sin(radians)) * Constants.RETURN_DISTANCE;
-					float z0 = onMap.z - Math.round(Math.cos(radians)) * Constants.RETURN_DISTANCE;
+					float x0 = onMap.x - Utils.getXMoveMult(radians) * Constants.RETURN_DISTANCE;
+					float z0 = onMap.z - Utils.getZMoveMult(radians) * Constants.RETURN_DISTANCE;
 					context.getPlayer().setPhysicsLocation(new Vector3f(x0, 0, z0));
 				}
 			}
@@ -56,7 +53,6 @@ public class MovingManager {
 	}
 
 	private Road findRoad(int x, int z) {
-		System.out.printf("x:%d z:%d\n", x, z);
 		if (rememberedRoad != null && rememberedRoad.hasPoint(x, z)) {
 			return rememberedRoad;
 		}
@@ -69,7 +65,6 @@ public class MovingManager {
 
 	private Direction findDirection() {
 		float currentAngle = context.getAngleDegress();
-		System.out.printf("angle:%f\n", currentAngle);
 		for (Direction direction : Direction.values()) {
 			if (Math.abs(currentAngle - direction.getDegress()) < 20)
 				return direction;

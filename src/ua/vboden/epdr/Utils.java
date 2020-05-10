@@ -44,20 +44,20 @@ public class Utils {
 		return (float) (radians * 180.0 / Math.PI);
 	}
 
-	public static float getZMoveSign(float radians) {
-		return (float) Math.round(Math.cos(radians));
-	}
-
-	public static float getXMoveSign(float radians) {
+	public static float getXMoveMult(float radians) {
 		return (float) Math.round(Math.sin(radians));
 	}
 
-	public static float getZMoveSignDeg(float degress) {
-		return getZMoveSign(toRadians(degress));
+	public static float getZMoveMult(float radians) {
+		return (float) Math.round(Math.cos(radians));
 	}
 
-	public static float getXMoveSignDeg(float degress) {
-		return getXMoveSign(toRadians(degress));
+	public static float getZMoveMultDeg(float degress) {
+		return getZMoveMult(toRadians(degress));
+	}
+
+	public static float getXMoveMultDeg(float degress) {
+		return getXMoveMult(toRadians(degress));
 	}
 
 	public static float correctAngleRange(float currentDegress) {
@@ -67,5 +67,4 @@ public class Utils {
 			currentDegress += 360;
 		return currentDegress;
 	}
-
 }

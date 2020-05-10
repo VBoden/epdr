@@ -10,7 +10,6 @@ import static ua.vboden.epdr.Direction.W;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import com.jme3.material.Material;
 import com.jme3.math.Quaternion;
@@ -29,7 +28,7 @@ public class RoadCrossWithLights extends AbstractRoadCross {
 
 	@Override
 	public void addControls() {
-		int roadMove = 2 * DOUBLE_SCALE;
+		int roadMove = DOUBLE_SCALE;
 		int sideMove = 2;
 		lights.put(S, addLights(1, 1, sideMove, roadMove, N.getDegress()));
 		lights.put(E, addLights(1, -1, roadMove, sideMove, W.getDegress()));
@@ -60,19 +59,17 @@ public class RoadCrossWithLights extends AbstractRoadCross {
 	public Boolean passedCross(Direction direction, Road rememberedRoad, int x, int z) {
 		if (this.equals(getContext().getPassedCross()))
 			return null;
-		int xSign = (int) Utils.getXMoveSignDeg(direction.getDegress());
-		int zSign = (int) Utils.getZMoveSignDeg(direction.getDegress());
+		int xSign = (int) Utils.getXMoveMultDeg(direction.getDegress());
+		int zSign = (int) Utils.getZMoveMultDeg(direction.getDegress());
 		Vector3f position = lights.get(direction).getLights().getLocalTranslation();
 		int roadX = (int) (position.x / DOUBLE_SCALE);
 		int roadZ = (int) (position.z / DOUBLE_SCALE);
-		boolean passedLights = hasPassedLights(x, z, xSign, zSign, roadX, roadZ);
+		boolean passedLights = hasPassedLights(x + xSign, z + zSign, xSign, zSign, roadX, roadZ);
 		float toLightDist = 2;
-		System.out.printf("light: %d %d \n", roadX, roadZ);
 		boolean passedLightsSeenPoint = hasPassedLights(x + xSign * toLightDist, z + zSign * toLightDist, xSign, zSign,
 				roadX, roadZ);
 		if (!passedLights && !passedLightsSeenPoint)
 			seenColor = lights.get(direction).getColor();
-		System.out.println(seenColor + " " + passedLights + " " + passedLightsSeenPoint);
 		if (passedLights)
 			return Color.GREEN.equals(seenColor);
 		return null;

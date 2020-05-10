@@ -53,7 +53,6 @@ public class Road {
 
 	public AbstractRoadCross getNearestCross(int x, int z, Direction direction) {
 		int point = toRoadPoint(x, z);
-		System.out.println("road point=" + point);
 		int index = 0;
 		int inc = 1;
 		int endIndex = crossPoints.size();
@@ -65,8 +64,6 @@ public class Road {
 		while (index != endIndex) {
 			Integer crossPosition = crossPoints.get(index);
 			if (-inc * (point - crossPosition) > 0) {
-				System.out.println(crossPosition);
-//				System.out.println(crosses.get(crossPosition));
 				return crosses.get(crossPosition);
 			}
 			index += inc;
