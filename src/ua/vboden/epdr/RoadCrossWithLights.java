@@ -65,7 +65,7 @@ public class RoadCrossWithLights extends AbstractRoadCross {
 		int roadX = (int) (position.x / DOUBLE_SCALE);
 		int roadZ = (int) (position.z / DOUBLE_SCALE);
 		boolean passedLights = hasPassedLights(x + xSign, z + zSign, xSign, zSign, roadX, roadZ);
-		float toLightDist = 2;
+		float toLightDist = 1f;
 		boolean passedLightsSeenPoint = hasPassedLights(x + xSign * toLightDist, z + zSign * toLightDist, xSign, zSign,
 				roadX, roadZ);
 		if (!passedLights && !passedLightsSeenPoint)
