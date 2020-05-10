@@ -54,7 +54,7 @@ public class RoadCrossWithLights extends AbstractRoadCross {
 		getRootNode().attachChild(lights);
 		Material yellowOn = getAssetManager().loadMaterial("Materials/Generated/lights-yellow.j3m");
 		((Node) lights).getChild(YELLOW.getNodeName()).setMaterial(yellowOn);
-		TrafficLights traficLights = new TrafficLights(lights);
+		TrafficLights traficLights = new TrafficLights(lights, YELLOW);
 		Thread thread = new Thread(new LightSwitcher(getContext().getMainApp(), traficLights, getAssetManager()));
 		thread.setDaemon(true);
 		thread.start();
@@ -83,6 +83,11 @@ public class RoadCrossWithLights extends AbstractRoadCross {
 
 	private boolean hasPassedLights(float x, float z, int xSign, int zSign, int roadX, int roadZ) {
 		return xSign * (x - roadX) + zSign * (z - roadZ) > 0;
+	}
+
+	@Override
+	public void resetCheckState() {
+		seenColor = null;
 	}
 
 }

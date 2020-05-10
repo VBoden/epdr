@@ -46,6 +46,8 @@ public abstract class AbstractRoadCross {
 
 	public abstract Boolean passedCross(Direction direction, Road rememberedRoad, int x, int z);
 
+	public abstract void resetCheckState();
+
 	public void setupReturnPoints() {
 		int roadMove = 2 * DOUBLE_SCALE;
 		int sideMove = -SCALE;

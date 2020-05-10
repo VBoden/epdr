@@ -11,8 +11,10 @@ public class TrafficMan {
 	private Direction direction;
 	private StickPosition stickPosition;
 
-	public TrafficMan(Spatial manModel) {
+	public TrafficMan(Spatial manModel, Direction direction, StickPosition stickPosition) {
 		this.manModel = manModel;
+		this.direction = direction;
+		this.stickPosition = stickPosition;
 	}
 
 	public Spatial getManModel() {

@@ -1,14 +1,9 @@
 package ua.vboden.epdr.crosses;
 
-import static ua.vboden.epdr.enums.Color.YELLOW;
 import static ua.vboden.epdr.Constants.DOUBLE_SCALE;
 import static ua.vboden.epdr.Constants.SCALE;
-import static ua.vboden.epdr.enums.Direction.E;
 import static ua.vboden.epdr.enums.Direction.N;
-import static ua.vboden.epdr.enums.Direction.S;
-import static ua.vboden.epdr.enums.Direction.W;
 
-import com.jme3.material.Material;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -47,7 +42,7 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 		getRootNode().attachChild(man);
 		man.setLocalRotation(new Quaternion().fromAngles(0, 0, 0));
 		((Node) man).getChild("stick").setLocalRotation(new Quaternion(new float[] { 0, 0, 0 }));
-		trafficMan = new TrafficMan(man);
+		trafficMan = new TrafficMan(man, N, StickPosition.DOWN);
 		Thread thread = new Thread(new ManPositionSwitcher(getContext().getMainApp(), trafficMan));
 		thread.setDaemon(true);
 		thread.start();
@@ -69,9 +64,19 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 		if (!passedLightsSeenPoint) {
 			seenStickPos = trafficMan.getStickPosition();
 			seenDirection = trafficMan.getDirection();
-		} else {
-			if (StickPosition.UP.equals(seenStickPos))
+		} else if (seenDirection != null) {
+			if (StickPosition.UP.equals(seenStickPos) || seenDirection.equals(direction))
 				return false;
+			int diff = seenDirection.getDegress() - direction.getDegress();
+			if (diff == 90 || diff == -270) {
+				System.out.println("moving from left");
+				if (StickPosition.FORWARD.equals(seenStickPos))
+					return true;
+			}
+			if (diff == -90 || diff == 270) {
+				if (StickPosition.FORWARD.equals(seenStickPos))
+					return false;
+			}
 		}
 
 		return null;
@@ -79,6 +84,12 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 
 	private boolean hasPassedLights(float x, float z, int xSign, int zSign, int roadX, int roadZ) {
 		return xSign * (x - roadX) + zSign * (z - roadZ) > 0;
+	}
+
+	@Override
+	public void resetCheckState() {
+		seenDirection = null;
+		seenStickPos = null;
 	}
 
 }

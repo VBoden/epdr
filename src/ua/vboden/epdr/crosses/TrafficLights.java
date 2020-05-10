@@ -10,8 +10,9 @@ public class TrafficLights {
 	private Color color;
 //	private int roadPoint;
 
-	public TrafficLights(Spatial lights) {
+	public TrafficLights(Spatial lights, Color color) {
 		this.lights = lights;
+		this.color = color;
 	}
 
 	public Spatial getLights() {
