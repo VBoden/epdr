@@ -53,6 +53,7 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 	private static final String KEY_UP = "arrow_up";
 	private static final String KEY_LEFT = "arrow_left";
 	private static final String KEY_RIGHT = "arrow_right";
+	private static final String KEY_BACKSPACE = "backspace";
 	private static final float TURN_SPEED_MULTIPLIER = 10;
 
 	private Map<String, Integer> keyNames = new HashMap<String, Integer>() {
@@ -66,6 +67,7 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 			put(KEY_UP, KeyInput.KEY_UP);
 			put(KEY_LEFT, KeyInput.KEY_LEFT);
 			put(KEY_RIGHT, KeyInput.KEY_RIGHT);
+			put(KEY_BACKSPACE, KeyInput.KEY_BACK);
 		}
 	};
 
@@ -80,6 +82,7 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 			put(KEY_UP, 1.0f);
 			put(KEY_LEFT, 1.0f);
 			put(KEY_RIGHT, 1.0f);
+			put(KEY_BACKSPACE, 1.0f);
 		}
 	};
 
@@ -206,6 +209,10 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 
 	@Override
 	public void simpleUpdate(float tpf) {
+		if (keyValues.get(KEY_BACKSPACE) > 0) {
+			restartMove();
+			return;
+		}
 		speed = (float) (context.getSpeed() + 0.02 * (keyValues.get(KEY_UP) - keyValues.get(KEY_DOWN)));
 		if (speed < 0)
 			speed = 0;
@@ -239,6 +246,14 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 		if (moveManagTriggerCounter % 10 == 0)
 			movingManager.manage(player.getPhysicsLocation());
 		moveManagTriggerCounter++;
+	}
+
+	private void restartMove() {
+		player.setPhysicsLocation(new Vector3f(DOUBLE_SCALE, 10, 0));
+		cam.getRotation().fromAngles(0, 0, 0);
+		speed = 0;
+		context.setSpeed(speed);
+		context.setAngle(0);
 	}
 
 	private void rotateCamera(float degress) {
