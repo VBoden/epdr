@@ -4,6 +4,7 @@ import static ua.vboden.epdr.Color.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
@@ -48,15 +49,19 @@ public class LightSwitcher implements Runnable {
 
 	@Override
 	public void run() {
+		int oneSec = 1000;
+		int greenTime = oneSec * ThreadLocalRandom.current().nextInt(20, 41);
+		int redTime = oneSec * ThreadLocalRandom.current().nextInt(10, 21);
+		int yellowTime = 5 * oneSec;
 		while (true) {
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(yellowTime);
 				switchColor(YELLOW, GREEN);
-				Thread.sleep(3000);
+				Thread.sleep(greenTime);
 				switchColor(GREEN, YELLOW);
-				Thread.sleep(3000);
+				Thread.sleep(yellowTime);
 				switchColor(YELLOW, RED);
-				Thread.sleep(3000);
+				Thread.sleep(redTime);
 				switchColor(RED, YELLOW);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
