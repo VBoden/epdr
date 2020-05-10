@@ -17,6 +17,8 @@ import com.jme3.scene.Spatial;
 public class RoadCrossWithMan extends AbstractRoadCross {
 
 	private TrafficMan trafficMan;
+	private Direction seenDirection;
+	private StickPosition seenStickPos;
 
 	public RoadCrossWithMan(Vector3f coordinates, AppContext context) {
 		super(coordinates, context);
@@ -48,8 +50,29 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 
 	@Override
 	public Boolean passedCross(Direction direction, Road rememberedRoad, int x, int z) {
-		// TODO Auto-generated method stub
-		return true;
+		if (this.equals(getContext().getPassedCross()))
+			return null;
+		int xSign = (int) Utils.getXMoveMultDeg(direction.getDegress());
+		int zSign = (int) Utils.getZMoveMultDeg(direction.getDegress());
+		Vector3f position = getPointOnMap(direction);
+		int roadX = (int) (position.x / DOUBLE_SCALE);
+		int roadZ = (int) (position.z / DOUBLE_SCALE);
+		float toLightDist = 0f;
+		boolean passedLightsSeenPoint = hasPassedLights(x + xSign * toLightDist, z + zSign * toLightDist, xSign, zSign,
+				roadX, roadZ);
+		if (!passedLightsSeenPoint) {
+			seenStickPos = trafficMan.getStickPosition();
+			seenDirection = trafficMan.getDirection();
+		} else {
+			if (StickPosition.UP.equals(seenStickPos))
+				return false;
+		}
+
+		return null;
+	}
+
+	private boolean hasPassedLights(float x, float z, int xSign, int zSign, int roadX, int roadZ) {
+		return xSign * (x - roadX) + zSign * (z - roadZ) > 0;
 	}
 
 }
