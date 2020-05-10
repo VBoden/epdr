@@ -125,6 +125,7 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 
 		createScreenText();
 
+		context.setMainApp(this);
 		context.setAssetManager(assetManager);
 		context.setRootNode(rootNode);
 		context.setBulletAppState(bulletAppState);

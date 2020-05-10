@@ -11,6 +11,7 @@ import com.jme3.scene.Node;
 
 public class AppContext {
 
+	private AppStart mainApp;
 	private Node rootNode;
 	private AssetManager assetManager;
 	private BulletAppState bulletAppState;
@@ -21,6 +22,14 @@ public class AppContext {
 	private float angle = 0;
 	private float speed = 0f;
 	private AbstractRoadCross passedCross;
+
+	public AppStart getMainApp() {
+		return mainApp;
+	}
+
+	public void setMainApp(AppStart mainApp) {
+		this.mainApp = mainApp;
+	}
 
 	public Node getRootNode() {
 		return rootNode;

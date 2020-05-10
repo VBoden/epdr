@@ -45,7 +45,7 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 		man.setLocalRotation(new Quaternion().fromAngles(0, 0, 0));
 		((Node) man).getChild("stick").setLocalRotation(new Quaternion(new float[] { 0, 0, 0 }));
 		trafficMan = new TrafficMan(man);
-		Thread thread = new Thread(new ManPositionSwitcher(trafficMan));
+		Thread thread = new Thread(new ManPositionSwitcher(getContext().getMainApp(), trafficMan));
 		thread.setDaemon(true);
 		thread.start();
 		return trafficMan;

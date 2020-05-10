@@ -10,6 +10,7 @@ import static ua.vboden.epdr.Utils.toRadians;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.jme3.math.Quaternion;
@@ -19,6 +20,7 @@ import com.jme3.scene.Spatial;
 
 public class ManPositionSwitcher implements Runnable {
 
+	private AppStart mainApp;
 	private TrafficMan man;
 	private int directionCounter;
 	private Direction[] directions = Direction.values();
@@ -27,8 +29,9 @@ public class ManPositionSwitcher implements Runnable {
 	private Map<StickPosition, float[]> stickRotation;
 	private Map<StickPosition, Vector3f> stickTranslation;
 
-	public ManPositionSwitcher(TrafficMan man) {
+	public ManPositionSwitcher(AppStart mainApp, TrafficMan man) {
 		this.man = man;
+		this.mainApp = mainApp;
 
 		stickRotation = new HashMap<StickPosition, float[]>() {
 			{
@@ -85,8 +88,15 @@ public class ManPositionSwitcher implements Runnable {
 				Direction direction = directions[directionCounter % directions.length];
 				directionCounter++;
 				System.out.println(direction);
-				man.getManModel()
-						.setLocalRotation(new Quaternion().fromAngles(0, toRadians(direction.getDegress()), 0));
+				mainApp.enqueue(new Callable<Spatial>() {
+
+					@Override
+					public Spatial call() throws Exception {
+						man.getManModel()
+								.setLocalRotation(new Quaternion().fromAngles(0, toRadians(direction.getDegress()), 0));
+						return man.getManModel();
+					}
+				});
 				man.setDirection(direction);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -95,9 +105,16 @@ public class ManPositionSwitcher implements Runnable {
 	}
 
 	private void switchPosition(StickPosition newPosition) {
-		Spatial stick = ((Node) man.getManModel()).getChild("stick");
-//		stick.setLocalRotation(stick.getLocalRotation().fromAngles(stickRotation.get(newPosition)));
-//		stick.setLocalTranslation(stickTranslation.get(newPosition));
+		mainApp.enqueue(new Callable<Spatial>() {
+
+			@Override
+			public Spatial call() throws Exception {
+				Spatial stick = ((Node) man.getManModel()).getChild("stick");
+				stick.setLocalRotation(stick.getLocalRotation().fromAngles(stickRotation.get(newPosition)));
+				stick.setLocalTranslation(stickTranslation.get(newPosition));
+				return stick;
+			}
+		});
 		man.setStickPosition(newPosition);
 	}
 
