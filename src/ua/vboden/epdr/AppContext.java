@@ -9,6 +9,8 @@ import com.jme3.bullet.control.CharacterControl;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 
+import ua.vboden.epdr.crosses.AbstractRoadCross;
+
 public class AppContext {
 
 	private AppStart mainApp;

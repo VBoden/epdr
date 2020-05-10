@@ -1,4 +1,4 @@
-package ua.vboden.epdr;
+package ua.vboden.epdr.crosses;
 
 import com.jme3.scene.Spatial;
 

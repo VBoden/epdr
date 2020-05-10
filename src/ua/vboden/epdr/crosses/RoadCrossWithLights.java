@@ -1,4 +1,4 @@
-package ua.vboden.epdr;
+package ua.vboden.epdr.crosses;
 
 import static ua.vboden.epdr.enums.Color.YELLOW;
 import static ua.vboden.epdr.Constants.DOUBLE_SCALE;
@@ -17,12 +17,15 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
+import ua.vboden.epdr.AppContext;
+import ua.vboden.epdr.Road;
+import ua.vboden.epdr.Utils;
 import ua.vboden.epdr.enums.Color;
 import ua.vboden.epdr.enums.Direction;
 
 public class RoadCrossWithLights extends AbstractRoadCross {
 
-	private Map<Direction, TrafficLishts> lights = new HashMap<>();
+	private Map<Direction, TrafficLights> lights = new HashMap<>();
 	private Color seenColor;
 
 	public RoadCrossWithLights(Vector3f coordinates, AppContext context) {
@@ -40,7 +43,7 @@ public class RoadCrossWithLights extends AbstractRoadCross {
 		setupReturnPoints();
 	}
 
-	private TrafficLishts addLights(int xSign, int zSign, int dx, int dz, int degress) {
+	private TrafficLights addLights(int xSign, int zSign, int dx, int dz, int degress) {
 		int x = ((int) getCoordinates().x + xSign) * DOUBLE_SCALE + SCALE + xSign * dx;
 		int z = ((int) getCoordinates().z + zSign) * DOUBLE_SCALE - SCALE + zSign * dz;
 		Spatial lights = getAssetManager().loadModel("Models/lights.j3o");
@@ -51,7 +54,7 @@ public class RoadCrossWithLights extends AbstractRoadCross {
 		getRootNode().attachChild(lights);
 		Material yellowOn = getAssetManager().loadMaterial("Materials/Generated/lights-yellow.j3m");
 		((Node) lights).getChild(YELLOW.getNodeName()).setMaterial(yellowOn);
-		TrafficLishts traficLights = new TrafficLishts(lights);
+		TrafficLights traficLights = new TrafficLights(lights);
 		Thread thread = new Thread(new LightSwitcher(getContext().getMainApp(), traficLights, getAssetManager()));
 		thread.setDaemon(true);
 		thread.start();

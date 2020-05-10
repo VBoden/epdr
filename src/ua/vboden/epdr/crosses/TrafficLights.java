@@ -1,16 +1,16 @@
-package ua.vboden.epdr;
+package ua.vboden.epdr.crosses;
 
 import com.jme3.scene.Spatial;
 
 import ua.vboden.epdr.enums.Color;
 
-public class TrafficLishts {
+public class TrafficLights {
 
 	private Spatial lights;
 	private Color color;
 //	private int roadPoint;
 
-	public TrafficLishts(Spatial lights) {
+	public TrafficLights(Spatial lights) {
 		this.lights = lights;
 	}
 

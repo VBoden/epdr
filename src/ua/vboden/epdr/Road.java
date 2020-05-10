@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.jme3.math.Vector3f;
 
+import ua.vboden.epdr.crosses.AbstractRoadCross;
 import ua.vboden.epdr.enums.Direction;
 
 public class Road {

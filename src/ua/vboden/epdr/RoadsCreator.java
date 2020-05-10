@@ -11,6 +11,10 @@ import java.util.Set;
 
 import com.jme3.math.Vector3f;
 
+import ua.vboden.epdr.crosses.AbstractRoadCross;
+import ua.vboden.epdr.crosses.RoadCrossWithLights;
+import ua.vboden.epdr.crosses.RoadCrossWithMan;
+
 public class RoadsCreator {
 
 	private static final int START_X = 0;

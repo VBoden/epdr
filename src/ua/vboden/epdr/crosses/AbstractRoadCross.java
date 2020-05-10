@@ -1,4 +1,4 @@
-package ua.vboden.epdr;
+package ua.vboden.epdr.crosses;
 
 import static ua.vboden.epdr.Constants.DOUBLE_SCALE;
 import static ua.vboden.epdr.Constants.SCALE;
@@ -18,6 +18,8 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
+import ua.vboden.epdr.AppContext;
+import ua.vboden.epdr.Road;
 import ua.vboden.epdr.enums.Direction;
 
 public abstract class AbstractRoadCross {

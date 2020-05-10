@@ -16,6 +16,8 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Quad;
 
+import ua.vboden.epdr.crosses.AbstractRoadCross;
+
 public class ModelsManager {
 
 	private Node rootNode;

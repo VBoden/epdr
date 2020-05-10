@@ -1,4 +1,4 @@
-package ua.vboden.epdr;
+package ua.vboden.epdr.crosses;
 
 import static ua.vboden.epdr.enums.StickPosition.BEFORE;
 import static ua.vboden.epdr.enums.StickPosition.DOWN;
@@ -17,6 +17,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
+import ua.vboden.epdr.AppStart;
 import ua.vboden.epdr.enums.Direction;
 import ua.vboden.epdr.enums.StickPosition;
 

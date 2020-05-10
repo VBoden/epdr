@@ -1,4 +1,4 @@
-package ua.vboden.epdr;
+package ua.vboden.epdr.crosses;
 
 import static ua.vboden.epdr.enums.Color.GREEN;
 import static ua.vboden.epdr.enums.Color.RED;
@@ -14,12 +14,13 @@ import com.jme3.material.Material;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
+import ua.vboden.epdr.AppStart;
 import ua.vboden.epdr.enums.Color;
 
 public class LightSwitcher implements Runnable {
 
 	private AppStart mainApp;
-	private TrafficLishts traficLights;
+	private TrafficLights traficLights;
 	private Material greenOn;
 	private Material yellowOn;
 	private Material redOn;
@@ -30,7 +31,7 @@ public class LightSwitcher implements Runnable {
 	private Map<Color, Material> onMaterials;
 	private Map<Color, Material> offMaterials;
 
-	public LightSwitcher(AppStart mainApp, TrafficLishts traficLights, AssetManager assetManager) {
+	public LightSwitcher(AppStart mainApp, TrafficLights traficLights, AssetManager assetManager) {
 		this.mainApp = mainApp;
 		this.traficLights = traficLights;
 		greenOn = assetManager.loadMaterial("Materials/Generated/lights-green.j3m");
