@@ -47,7 +47,7 @@ public class ModelsManager {
 		Material roadWithSide = assetManager.loadMaterial("Materials/green.j3m");
 		roadWithSide.setTexture("DiffuseMap", assetManager.loadTexture("Materials/RoadSide.png"));
 		Material roadWithCrossSide = assetManager.loadMaterial("Materials/green.j3m");
-		roadWithCrossSide.setTexture("DiffuseMap", assetManager.loadTexture("Materials/RoadCrossSide.png"));
+		roadWithCrossSide.setTexture("DiffuseMap", assetManager.loadTexture("Materials/RoadCrossSide2.png"));
 		Material roadWithDashedMarking = assetManager.loadMaterial("Materials/green.j3m");
 		roadWithDashedMarking.setTexture("DiffuseMap", assetManager.loadTexture("Materials/RoadDashed.png"));
 
