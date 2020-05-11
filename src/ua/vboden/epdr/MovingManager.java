@@ -12,6 +12,7 @@ public class MovingManager {
 	private AppContext context;
 	private Direction rememberedDir;
 	private Road rememberedRoad;
+	private AbstractRoadCross rememberedCross;
 
 	public MovingManager(AppContext context) {
 		this.context = context;
@@ -36,17 +37,24 @@ public class MovingManager {
 			return;
 		if (context.getPassedCross() != null || x > 5 || z > 5) {
 			AbstractRoadCross cross = rememberedRoad.getNearestCross(x, z, direction);
-			if (cross != null) {
-				Boolean passed = cross.passedCross(direction, rememberedRoad, x, z);
+			if (rememberedCross == null && cross != null || rememberedCross.equals(context.getPassedCross())) {
+				rememberedCross = cross;
+			}
+			if (rememberedCross != null) {
+				Boolean passed = rememberedCross.passedCross(direction, rememberedRoad, x, z);
 				if (passed == null)
 					return;
+				rememberedCross.resetCheckState();
+//				System.out.println("passed");
 				if (passed) {
-					context.setPassedCross(cross);
+					context.setPassedCross(rememberedCross);
+					rememberedCross = null;
+//					System.out.println("passed2");
 				} else {
 					context.setSpeed(0);
 					float radians = Utils.toRadians(direction.getDegress());
 					context.cam.getRotation().fromAngles(0, radians, 0);
-					Vector3f onMap = cross.getPointOnMap(direction);
+					Vector3f onMap = rememberedCross.getPointOnMap(direction);
 					float x0 = onMap.x - Utils.getXMoveMult(radians) * Constants.RETURN_DISTANCE;
 					float z0 = onMap.z - Utils.getZMoveMult(radians) * Constants.RETURN_DISTANCE;
 					context.getPlayer().setPhysicsLocation(new Vector3f(x0, 1, z0));
