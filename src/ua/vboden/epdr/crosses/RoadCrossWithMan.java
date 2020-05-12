@@ -4,6 +4,10 @@ import static ua.vboden.epdr.Constants.DOUBLE_SCALE;
 import static ua.vboden.epdr.Constants.SCALE;
 import static ua.vboden.epdr.enums.Direction.N;
 
+import java.util.Arrays;
+import java.util.List;
+
+import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -20,6 +24,8 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 	private TrafficMan trafficMan;
 	private Direction seenDirection;
 	private StickPosition seenStickPos;
+	private Direction directionAtSeenPoint;
+//	private 
 
 	public RoadCrossWithMan(Vector3f coordinates, AppContext context) {
 		super(coordinates, context);
@@ -27,11 +33,11 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 
 	@Override
 	public void addControls() {
-		trafficMan = addLights(N.getDegress());
+		trafficMan = addTrafficMan(N.getDegress());
 		setupReturnPoints();
 	}
 
-	private TrafficMan addLights(int degress) {
+	private TrafficMan addTrafficMan(int degress) {
 		int x = (int) getCoordinates().x * DOUBLE_SCALE + SCALE;
 		int z = (int) getCoordinates().z * DOUBLE_SCALE - SCALE;
 		Spatial man = getAssetManager().loadModel("Models/man.j3o");
@@ -53,34 +59,75 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 	public Boolean passedCross(Direction direction, Road rememberedRoad, int x, int z) {
 		if (this.equals(getContext().getPassedCross()))
 			return null;
-		int xSign = (int) Utils.getXMoveMultDeg(direction.getDegress());
-		int zSign = (int) Utils.getZMoveMultDeg(direction.getDegress());
-		Vector3f position = getPointOnMap(direction);
+		if (directionAtSeenPoint == null) {
+//			System.out.println(direction);
+			directionAtSeenPoint = direction;
+		}
+		int xSign = (int) Utils.getXMoveMultDeg(directionAtSeenPoint.getDegress());
+		int zSign = (int) Utils.getZMoveMultDeg(directionAtSeenPoint.getDegress());
+		Vector3f position = getPointOnMap(directionAtSeenPoint);
 		int roadX = (int) (position.x / DOUBLE_SCALE);
 		int roadZ = (int) (position.z / DOUBLE_SCALE);
 		float toLightDist = 0f;
 		boolean passedLightsSeenPoint = hasPassedLights(x + xSign * toLightDist, z + zSign * toLightDist, xSign, zSign,
 				roadX, roadZ);
-		if (!passedLightsSeenPoint) {
+//		System.out.println("rem");
+		int diffMyDirection = direction.getDegress() - directionAtSeenPoint.getDegress();
+		if (!passedLightsSeenPoint && Math.abs(diffMyDirection) != 180) {
 			seenStickPos = trafficMan.getStickPosition();
 			seenDirection = trafficMan.getDirection();
+			directionAtSeenPoint = direction;
 		} else if (seenDirection != null) {
-			if (StickPosition.UP.equals(seenStickPos) || seenDirection.equals(direction))
+			if (StickPosition.UP.equals(seenStickPos) || seenDirection.equals(directionAtSeenPoint))
 				return false;
-			int diff = seenDirection.getDegress() - direction.getDegress();
-			if (diff == 90 || diff == -270) {
-				System.out.println("moving from left");
+			int diff = seenDirection.getDegress() - directionAtSeenPoint.getDegress();
+			if (diff == 90 || diff == -270) { // move from left
 				if (StickPosition.FORWARD.equals(seenStickPos))
 					return true;
 			}
-			if (diff == -90 || diff == 270) {
+			if (diff == -90 || diff == 270) { // move from right
 				if (StickPosition.FORWARD.equals(seenStickPos))
 					return false;
 			}
+//			System.out.println(directionAtSeenPoint);
+//			System.out.println(x + " " + roadX + " " + z + " " + roadZ);
+//			System.out.println((x - roadX) * (x - roadX) + (z - roadZ) * (z - roadZ));
+			if (Math.sqrt(Math.pow(x - roadX, 2) + Math.pow(z - roadZ, 2)) > 6 || Math.abs(diffMyDirection) == 180) {
+				if (StickPosition.DOWN.equals(seenStickPos) || StickPosition.SIDE.equals(seenStickPos)
+						|| StickPosition.BEFORE.equals(seenStickPos)) {
+					List<Integer> turnRightOrForward = Arrays.asList(0, -90, 270);
+					if ((diff != 0 && Math.abs(diff) != 180) && turnRightOrForward.contains(diffMyDirection)) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+				if (StickPosition.FORWARD.equals(seenStickPos)) {// only move to man left not considered
+					return diffMyDirection == -90 || diffMyDirection == 270;
+				}
+			}
+//			return true;
 		}
 
 		return null;
 	}
+
+//	 		0-0=0
+//			0-90=-90
+//			0-180=-180
+//			0-270=-270
+//			90-0=90
+//			90-90=0
+//			90-180=-90
+//			90-270=-180
+//			180-0=180
+//			180-90=90
+//			180-180=0
+//			180-270=-90
+//			270-0=270
+//			270-90=180
+//			270-180=90
+//			270-270=0
 
 	private boolean hasPassedLights(float x, float z, int xSign, int zSign, int roadX, int roadZ) {
 		return xSign * (x - roadX) + zSign * (z - roadZ) > 0;
@@ -90,6 +137,11 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 	public void resetCheckState() {
 		seenDirection = null;
 		seenStickPos = null;
+		directionAtSeenPoint = null;
+	}
+
+	protected void setTrafficMan(TrafficMan trafficMan) {
+		this.trafficMan = trafficMan;
 	}
 
 }

@@ -40,6 +40,7 @@ public class MovingManager {
 			if (rememberedCross == null && cross != null || rememberedCross.equals(context.getPassedCross())) {
 				rememberedCross = cross;
 			}
+//			System.out.println(rememberedCross);
 			if (rememberedCross != null) {
 				Boolean passed = rememberedCross.passedCross(direction, rememberedRoad, x, z);
 				if (passed == null)
@@ -49,7 +50,7 @@ public class MovingManager {
 				if (passed) {
 					context.setPassedCross(rememberedCross);
 					rememberedCross = null;
-//					System.out.println("passed2");
+					System.out.println("passed2");
 				} else {
 					context.setSpeed(0);
 					float radians = Utils.toRadians(direction.getDegress());
