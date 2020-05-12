@@ -7,7 +7,6 @@ import static ua.vboden.epdr.enums.Direction.N;
 import java.util.Arrays;
 import java.util.List;
 
-import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -25,7 +24,6 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 	private Direction seenDirection;
 	private StickPosition seenStickPos;
 	private Direction directionAtSeenPoint;
-//	private 
 
 	public RoadCrossWithMan(Vector3f coordinates, AppContext context) {
 		super(coordinates, context);
@@ -60,7 +58,6 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 		if (this.equals(getContext().getPassedCross()))
 			return null;
 		if (directionAtSeenPoint == null) {
-//			System.out.println(direction);
 			directionAtSeenPoint = direction;
 		}
 		int xSign = (int) Utils.getXMoveMultDeg(directionAtSeenPoint.getDegress());
@@ -71,7 +68,6 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 		float toLightDist = 0f;
 		boolean passedLightsSeenPoint = hasPassedLights(x + xSign * toLightDist, z + zSign * toLightDist, xSign, zSign,
 				roadX, roadZ);
-//		System.out.println("rem");
 		int diffMyDirection = direction.getDegress() - directionAtSeenPoint.getDegress();
 		if (!passedLightsSeenPoint && Math.abs(diffMyDirection) != 180) {
 			seenStickPos = trafficMan.getStickPosition();
@@ -89,9 +85,6 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 				if (StickPosition.FORWARD.equals(seenStickPos))
 					return false;
 			}
-//			System.out.println(directionAtSeenPoint);
-//			System.out.println(x + " " + roadX + " " + z + " " + roadZ);
-//			System.out.println((x - roadX) * (x - roadX) + (z - roadZ) * (z - roadZ));
 			if (Math.sqrt(Math.pow(x - roadX, 2) + Math.pow(z - roadZ, 2)) > 6 || Math.abs(diffMyDirection) == 180) {
 				if (StickPosition.DOWN.equals(seenStickPos) || StickPosition.SIDE.equals(seenStickPos)
 						|| StickPosition.BEFORE.equals(seenStickPos)) {
@@ -106,28 +99,9 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 					return diffMyDirection == -90 || diffMyDirection == 270;
 				}
 			}
-//			return true;
 		}
-
 		return null;
 	}
-
-//	 		0-0=0
-//			0-90=-90
-//			0-180=-180
-//			0-270=-270
-//			90-0=90
-//			90-90=0
-//			90-180=-90
-//			90-270=-180
-//			180-0=180
-//			180-90=90
-//			180-180=0
-//			180-270=-90
-//			270-0=270
-//			270-90=180
-//			270-180=90
-//			270-270=0
 
 	private boolean hasPassedLights(float x, float z, int xSign, int zSign, int roadX, int roadZ) {
 		return xSign * (x - roadX) + zSign * (z - roadZ) > 0;
