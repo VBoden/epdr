@@ -63,17 +63,15 @@ public class ManPositionSwitcher implements Runnable {
 		int yellowTime = 5 * oneSec;
 		while (true) {
 			try {
-				Thread.sleep(yellowTime);
-				switchPosition(UP);
 				Thread.sleep(greenTime);
-				switchPosition(FORWARD);
+				switchPosition(UP); // 8.8 в)
 				Thread.sleep(yellowTime);
-				switchPosition(UP);
+				switchPosition(FORWARD); // 8.8 б)
 				Thread.sleep(redTime);
+				switchPosition(UP); // 8.8 в)
+				Thread.sleep(yellowTime);
 				int position = ThreadLocalRandom.current().nextInt(0, 3);
-				switchPosition(samePosition[position]);
-				Thread.sleep(redTime);
-				switchPosition(UP);
+				switchPosition(samePosition[position]); // 8.8 а)
 				Direction direction = directions[directionCounter % directions.length];
 				directionCounter++;
 				rotateMan(direction);
