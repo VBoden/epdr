@@ -37,7 +37,8 @@ public class MovingManager {
 			return;
 		if (context.getPassedCross() != null || x > 5 || z > 5) {
 			AbstractRoadCross cross = lastNotNullRoad.getNearestCross(x, z, lastNotNullDirection);
-			if (rememberedCross == null && cross != null || rememberedCross.equals(context.getPassedCross())) {
+			if (rememberedCross == null && cross != null
+					|| rememberedCross != null && rememberedCross.equals(context.getPassedCross())) {
 				rememberedCross = cross;
 				rememberedDir = lastNotNullDirection;
 			}
@@ -53,6 +54,8 @@ public class MovingManager {
 					rememberedCross = null;
 					System.out.println("passed2");
 				} else {
+					System.out.println(rememberedCross);
+					System.out.println(rememberedDir + " " + x + " " + z);
 					context.setSpeed(0);
 					float radians = Utils.toRadians(rememberedDir.getDegress());
 					context.cam.getRotation().fromAngles(0, radians, 0);
@@ -65,15 +68,39 @@ public class MovingManager {
 		}
 	}
 
+//	passed2
+//	AbstractRoadCross [members=[0, 6] coordinates=(1.0, 0.0, 1.0)]
+//	E 3 1
+//	AbstractRoadCross [members=[0, 6] coordinates=(1.0, 0.0, 1.0)]
+//	E 3 1
+//	AbstractRoadCross [members=[0, 6] coordinates=(1.0, 0.0, 1.0)]
+//	E 3 1
+//	passed2
+//	AbstractRoadCross [members=[2, 6] coordinates=(20.0, 0.0, 1.0)]
+//	N 1 1
+//	passed2
+//	AbstractRoadCross [members=[3, 6] coordinates=(40.0, 0.0, 1.0)]
+//	N 20 -1
+//	passed2
+//	AbstractRoadCross [members=[6, 4] coordinates=(60.0, 0.0, 1.0)]
+//	N 40 -1
+//	passed2
+//	AbstractRoadCross [members=[5, 6] coordinates=(80.0, 0.0, 1.0)]
+//	N 60 -1
+
 	private Road findRoad(int x, int z) {
-		if (lastNotNullRoad != null && lastNotNullRoad.hasPoint(x, z)) {
+		if (lastNotNullRoad != null && roadCorrespondsDirection(lastNotNullRoad) && lastNotNullRoad.hasPoint(x, z)) {
 			return lastNotNullRoad;
 		}
 		for (Road road : context.getRoads()) {
-			if (road.hasPoint(x, z))
+			if (roadCorrespondsDirection(road) && road.hasPoint(x, z))
 				return road;
 		}
 		return null;
+	}
+
+	private boolean roadCorrespondsDirection(Road road) {
+		return lastNotNullDirection != null && (road.isDirectedByZ() != (lastNotNullDirection.getDegress() % 180 != 0));
 	}
 
 	private Direction findDirection() {
