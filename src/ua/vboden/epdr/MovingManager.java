@@ -11,7 +11,8 @@ public class MovingManager {
 
 	private AppContext context;
 	private Direction rememberedDir;
-	private Road rememberedRoad;
+	private Direction lastNotNullDirection;
+	private Road lastNotNullRoad;
 	private AbstractRoadCross rememberedCross;
 
 	public MovingManager(AppContext context) {
@@ -21,28 +22,28 @@ public class MovingManager {
 	public void manage(Vector3f currentPos) {
 		Direction currentDirection = findDirection();
 		if (currentDirection != null) {
-			rememberedDir = currentDirection;
+			lastNotNullDirection = currentDirection;
 		}
-		Direction direction = rememberedDir;
 		int x = Math.round(currentPos.x / DOUBLE_SCALE);
 		int z = Math.round(currentPos.z / DOUBLE_SCALE);
-		if (Direction.E.equals(direction))
+		if (Direction.E.equals(lastNotNullDirection))
 			z += 1;
-		if (Direction.S.equals(direction))
+		if (Direction.S.equals(lastNotNullDirection))
 			x -= 1;
 		Road road = findRoad(x, z);
 		if (road != null && currentDirection != null)
-			rememberedRoad = road;
-		if (rememberedRoad == null)
+			lastNotNullRoad = road;
+		if (lastNotNullRoad == null)
 			return;
 		if (context.getPassedCross() != null || x > 5 || z > 5) {
-			AbstractRoadCross cross = rememberedRoad.getNearestCross(x, z, direction);
+			AbstractRoadCross cross = lastNotNullRoad.getNearestCross(x, z, lastNotNullDirection);
 			if (rememberedCross == null && cross != null || rememberedCross.equals(context.getPassedCross())) {
 				rememberedCross = cross;
+				rememberedDir = lastNotNullDirection;
 			}
 //			System.out.println(rememberedCross);
 			if (rememberedCross != null) {
-				Boolean passed = rememberedCross.passedCross(direction, rememberedRoad, x, z);
+				Boolean passed = rememberedCross.passedCross(lastNotNullDirection, lastNotNullRoad, x, z);
 				if (passed == null)
 					return;
 				rememberedCross.resetCheckState();
@@ -53,9 +54,9 @@ public class MovingManager {
 					System.out.println("passed2");
 				} else {
 					context.setSpeed(0);
-					float radians = Utils.toRadians(direction.getDegress());
+					float radians = Utils.toRadians(rememberedDir.getDegress());
 					context.cam.getRotation().fromAngles(0, radians, 0);
-					Vector3f onMap = rememberedCross.getPointOnMap(direction);
+					Vector3f onMap = rememberedCross.getPointOnMap(rememberedDir);
 					float x0 = onMap.x - Utils.getXMoveMult(radians) * Constants.RETURN_DISTANCE;
 					float z0 = onMap.z - Utils.getZMoveMult(radians) * Constants.RETURN_DISTANCE;
 					context.getPlayer().setPhysicsLocation(new Vector3f(x0, 1, z0));
@@ -65,8 +66,8 @@ public class MovingManager {
 	}
 
 	private Road findRoad(int x, int z) {
-		if (rememberedRoad != null && rememberedRoad.hasPoint(x, z)) {
-			return rememberedRoad;
+		if (lastNotNullRoad != null && lastNotNullRoad.hasPoint(x, z)) {
+			return lastNotNullRoad;
 		}
 		for (Road road : context.getRoads()) {
 			if (road.hasPoint(x, z))
