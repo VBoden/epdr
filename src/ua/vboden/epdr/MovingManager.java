@@ -35,51 +35,48 @@ public class MovingManager {
 			lastNotNullRoad = road;
 		if (lastNotNullRoad == null)
 			return;
-		if (context.getPassedCross() != null || x > 5 || z > 5) {
-			if (context.getPassedCross() != null) {
-				Vector3f passedCoord = context.getPassedCross().getCoordinates();
-				int passRadius = 5;
-				if (Math.abs(x - passedCoord.x) + Math.abs(z - passedCoord.z) < passRadius) {
-					return;
-				}
+		if (context.getPassedCross() != null) {
+			Vector3f passedCoord = context.getPassedCross().getCoordinates();
+			if (!Utils.isOutOfSquare(passedCoord, new Vector3f(x, 0, z))) {
+				return;
 			}
-			AbstractRoadCross cross = lastNotNullRoad.getNearestCross(x, z, lastNotNullDirection);
-			if (rememberedCross == null && cross != null
-			/*
-			 * || rememberedCross != null &&
-			 * rememberedCross.equals(context.getPassedCross())
-			 */) {
-				rememberedCross = cross;
-				dirAtStartCrossing = lastNotNullDirection;
+		}
+		AbstractRoadCross cross = lastNotNullRoad.getNearestCross(x, z, lastNotNullDirection);
+		if (rememberedCross == null && cross != null
+		/*
+		 * || rememberedCross != null &&
+		 * rememberedCross.equals(context.getPassedCross())
+		 */) {
+			rememberedCross = cross;
+			dirAtStartCrossing = lastNotNullDirection;
+		}
+		System.out.println(rememberedCross);
+		if (rememberedCross != null) {
+			Boolean passed = rememberedCross.passedCross(lastNotNullDirection, lastNotNullRoad, x, z);
+			if (passed == null) {
+				System.out.println("                  NULL " + rememberedCross);
+				System.out.println("                       " + dirAtStartCrossing + " " + x + " " + z);
+				return;
 			}
-			System.out.println(rememberedCross);
-			if (rememberedCross != null) {
-				Boolean passed = rememberedCross.passedCross(lastNotNullDirection, lastNotNullRoad, x, z);
-				if (passed == null) {
-					System.out.println("                  NULL " + rememberedCross);
-					System.out.println("                       " + dirAtStartCrossing + " " + x + " " + z);
-					return;
-				}
-				rememberedCross.resetCheckState();
+			rememberedCross.resetCheckState();
 //				System.out.println("passed");
-				if (passed) {
-					System.out.println("PASSED___ " + rememberedCross);
-					System.out.println(dirAtStartCrossing + " " + x + " " + z);
-					context.setPassedCross(rememberedCross);
-					rememberedCross = null;
-				} else {
-					System.out.println(rememberedCross);
-					System.out.println(dirAtStartCrossing + " " + x + " " + z);
-					context.setSpeed(0);
-					float radians = Utils.toRadians(dirAtStartCrossing.getDegress());
-					context.setAngle(radians);
-					context.cam.getRotation().fromAngles(0, radians, 0);
-					lastNotNullDirection = dirAtStartCrossing;
-					Vector3f onMap = rememberedCross.getPointOnMap(dirAtStartCrossing);
-					float x0 = onMap.x - Utils.getXMoveMult(radians) * Constants.RETURN_DISTANCE;
-					float z0 = onMap.z - Utils.getZMoveMult(radians) * Constants.RETURN_DISTANCE;
-					context.getPlayer().setPhysicsLocation(new Vector3f(x0, 1, z0));
-				}
+			if (passed) {
+				System.out.println("PASSED___ " + rememberedCross);
+				System.out.println(dirAtStartCrossing + " " + x + " " + z);
+				context.setPassedCross(rememberedCross);
+				rememberedCross = null;
+			} else {
+				System.out.println(rememberedCross);
+				System.out.println(dirAtStartCrossing + " " + x + " " + z);
+				context.setSpeed(0);
+				float radians = Utils.toRadians(dirAtStartCrossing.getDegress());
+				context.setAngle(radians);
+				context.cam.getRotation().fromAngles(0, radians, 0);
+				lastNotNullDirection = dirAtStartCrossing;
+				Vector3f onMap = rememberedCross.getPointOnMap(dirAtStartCrossing);
+				float x0 = onMap.x - Utils.getXMoveMult(radians) * Constants.RETURN_DISTANCE;
+				float z0 = onMap.z - Utils.getZMoveMult(radians) * Constants.RETURN_DISTANCE;
+				context.getPlayer().setPhysicsLocation(new Vector3f(x0, 1, z0));
 			}
 		}
 	}

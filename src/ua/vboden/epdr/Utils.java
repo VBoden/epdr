@@ -1,10 +1,13 @@
 package ua.vboden.epdr;
 
+import static ua.vboden.epdr.Constants.CROSS_PASSED_RADIUS;
+
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
 public class Utils {
@@ -66,5 +69,9 @@ public class Utils {
 		else if (currentDegress < 0)
 			currentDegress += 360;
 		return currentDegress;
+	}
+
+	public static boolean isOutOfSquare(Vector3f center, Vector3f position) {
+		return Math.abs(position.x - center.x) + Math.abs(position.z - center.z) >= CROSS_PASSED_RADIUS;
 	}
 }

@@ -1,5 +1,6 @@
 package ua.vboden.epdr;
 
+import static ua.vboden.epdr.Constants.CROSS_PASSED_RADIUS;
 import static ua.vboden.epdr.Constants.DOUBLE_SCALE;
 
 import java.math.BigDecimal;
@@ -93,6 +94,7 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 	private float speed = 0f;
 	private boolean correctedDirection;
 	private int moveManagTriggerCounter = 0;
+	Vector3f startLocation = new Vector3f(DOUBLE_SCALE, 10, 0);
 
 	private Nifty nifty;
 
@@ -146,7 +148,7 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 		bulletAppState.getPhysicsSpace().add(player);
 
 		player.setGravity(new Vector3f(0, -30f, 0));
-		player.setPhysicsLocation(new Vector3f(DOUBLE_SCALE, 10, 0));
+		player.setPhysicsLocation(startLocation);
 //		player.setPhysicsLocation(new Vector3f(15 * DOUBLE_SCALE, 10, 20 * DOUBLE_SCALE));
 //		rotateCamera(90);
 
@@ -233,9 +235,10 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 			walkDirection.addLocal(camDir);
 
 		player.setWalkDirection(walkDirection);
-		cam.setLocation(player.getPhysicsLocation());
-		if (moveManagTriggerCounter % 10 == 0)
-			movingManager.manage(player.getPhysicsLocation());
+		Vector3f physicsLocation = player.getPhysicsLocation();
+		cam.setLocation(physicsLocation);
+		if (moveManagTriggerCounter % 10 == 0 && Utils.isOutOfSquare(startLocation, physicsLocation))
+			movingManager.manage(physicsLocation);
 		moveManagTriggerCounter++;
 	}
 

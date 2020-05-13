@@ -59,8 +59,8 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 
 	@Override
 	public Boolean passedCross(Direction direction, Road rememberedRoad, int x, int z) {
-		if (this.equals(getContext().getPassedCross()))
-			return null;
+//		if (this.equals(getContext().getPassedCross()))
+//			return null;
 		if (directionAtSeenPoint == null) {
 			directionAtSeenPoint = direction;
 		}
@@ -93,7 +93,7 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 				if (StickPosition.FORWARD.equals(seenStickPos))
 					return false;
 			}
-			if (Math.sqrt(Math.pow(x - roadX, 2) + Math.pow(z - roadZ, 2)) > 6 || Math.abs(diffMyDirection) == 180) {
+			if (Utils.isOutOfSquare(getCoordinates(), new Vector3f(x, 0, z)) || Math.abs(diffMyDirection) == 180) {
 				if (StickPosition.DOWN.equals(seenStickPos) || StickPosition.SIDE.equals(seenStickPos)
 						|| StickPosition.BEFORE.equals(seenStickPos)) {
 					List<Integer> turnRightOrForward = Arrays.asList(0, -90, 270);
