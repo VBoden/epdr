@@ -25,7 +25,7 @@ public class ManPositionSwitcher implements Runnable {
 
 	private AppStart mainApp;
 	private TrafficMan man;
-	private int directionCounter;
+	private int directionCounter = 1;
 	private Direction[] directions = Direction.values();
 	private StickPosition[] samePosition = new StickPosition[] { DOWN, SIDE, BEFORE };
 	private Map<StickPosition, float[]> stickRotation;

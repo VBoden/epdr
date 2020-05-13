@@ -69,10 +69,14 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 		boolean passedLightsSeenPoint = hasPassedLights(x + xSign * toLightDist, z + zSign * toLightDist, xSign, zSign,
 				roadX, roadZ);
 		int diffMyDirection = direction.getDegress() - directionAtSeenPoint.getDegress();
+		System.out.println("           ----------" + x + " " + z + " " + direction);
 		if (!passedLightsSeenPoint && Math.abs(diffMyDirection) != 180) {
 			seenStickPos = trafficMan.getStickPosition();
 			seenDirection = trafficMan.getDirection();
 			directionAtSeenPoint = direction;
+			System.out.println("           ----------" + this);
+			System.out.println("           ----------" + seenStickPos + " " + seenDirection + " " + directionAtSeenPoint
+					+ " " + direction);
 		} else if (seenDirection != null) {
 			if (StickPosition.UP.equals(seenStickPos) || seenDirection.equals(directionAtSeenPoint))
 				return false;
@@ -109,6 +113,7 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 
 	@Override
 	public void resetCheckState() {
+		System.out.println(seenStickPos + " " + seenDirection + " " + directionAtSeenPoint);
 		seenDirection = null;
 		seenStickPos = null;
 		directionAtSeenPoint = null;
