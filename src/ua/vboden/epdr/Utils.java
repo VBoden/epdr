@@ -72,6 +72,10 @@ public class Utils {
 	}
 
 	public static boolean isOutOfSquare(Vector3f center, Vector3f position) {
-		return Math.abs(position.x - center.x) + Math.abs(position.z - center.z) >= CROSS_PASSED_RADIUS;
+		return isDistanceGreaterThan(center, position, CROSS_PASSED_RADIUS);
+	}
+
+	public static boolean isDistanceGreaterThan(Vector3f center, Vector3f position, int distance) {
+		return Math.abs(position.x - center.x) + Math.abs(position.z - center.z) >= distance;
 	}
 }

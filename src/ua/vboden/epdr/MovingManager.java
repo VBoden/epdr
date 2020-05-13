@@ -1,5 +1,6 @@
 package ua.vboden.epdr;
 
+import static ua.vboden.epdr.Constants.CROSS_PASSED_RADIUS;
 import static ua.vboden.epdr.Constants.DOUBLE_SCALE;
 
 import com.jme3.math.Vector3f;
@@ -30,6 +31,7 @@ public class MovingManager {
 			z += 1;
 		if (Direction.S.equals(lastNotNullDirection))
 			x -= 1;
+		Vector3f currentPosition = new Vector3f(x, 0, z);
 		Road road = findRoad(x, z);
 		if (road != null && currentDirection != null)
 			lastNotNullRoad = road;
@@ -37,16 +39,14 @@ public class MovingManager {
 			return;
 		if (context.getPassedCross() != null) {
 			Vector3f passedCoord = context.getPassedCross().getCoordinates();
-			if (!Utils.isOutOfSquare(passedCoord, new Vector3f(x, 0, z))) {
+			if (!Utils.isOutOfSquare(passedCoord, currentPosition)) {
 				return;
 			}
 		}
 		AbstractRoadCross cross = lastNotNullRoad.getNearestCross(x, z, lastNotNullDirection);
-		if (rememberedCross == null && cross != null
-		/*
-		 * || rememberedCross != null &&
-		 * rememberedCross.equals(context.getPassedCross())
-		 */) {
+		if ((rememberedCross == null || Utils.isOutOfSquare(rememberedCross.getCoordinates(), currentPosition))
+				&& cross != null
+				&& !Utils.isDistanceGreaterThan(cross.getCoordinates(), currentPosition, 2 * CROSS_PASSED_RADIUS)) {
 			rememberedCross = cross;
 			dirAtStartCrossing = lastNotNullDirection;
 		}
