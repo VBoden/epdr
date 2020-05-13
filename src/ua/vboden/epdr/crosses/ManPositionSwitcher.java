@@ -25,11 +25,11 @@ public class ManPositionSwitcher implements Runnable {
 
 	private AppStart mainApp;
 	private TrafficMan man;
-	private int directionCounter = 1;
 	private Direction[] directions = Direction.values();
 	private StickPosition[] samePosition = new StickPosition[] { DOWN, SIDE, BEFORE };
 	private Map<StickPosition, float[]> stickRotation;
 	private Map<StickPosition, Vector3f> stickTranslation;
+	private int prevDirectionIndex = -1;
 
 	public ManPositionSwitcher(AppStart mainApp, TrafficMan man) {
 		this.man = man;
@@ -58,11 +58,14 @@ public class ManPositionSwitcher implements Runnable {
 	@Override
 	public void run() {
 		int oneSec = 1000;
-		int greenTime = oneSec * ThreadLocalRandom.current().nextInt(20, 41);
+		int greenTime = oneSec * ThreadLocalRandom.current().nextInt(15, 35);
 		int redTime = oneSec * ThreadLocalRandom.current().nextInt(10, 21);
 		int yellowTime = 5 * oneSec;
 		while (true) {
 			try {
+				Direction direction = directions[getDirectionIndex()];
+				rotateMan(direction);
+				man.setDirection(direction);
 				Thread.sleep(greenTime);
 				switchPosition(UP); // 8.8 в)
 				Thread.sleep(yellowTime);
@@ -72,14 +75,20 @@ public class ManPositionSwitcher implements Runnable {
 				Thread.sleep(yellowTime);
 				int position = ThreadLocalRandom.current().nextInt(0, 3);
 				switchPosition(samePosition[position]); // 8.8 а)
-				Direction direction = directions[directionCounter % directions.length];
-				directionCounter++;
-				rotateMan(direction);
-				man.setDirection(direction);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private int getDirectionIndex() {
+		int index;
+		do {
+			index = ThreadLocalRandom.current().nextInt(0, directions.length);
+		} while (index == prevDirectionIndex);
+		prevDirectionIndex = index;
+		System.out.println(index);
+		return index;
 	}
 
 	private void rotateMan(Direction direction) {
