@@ -6,6 +6,7 @@ import static ua.vboden.epdr.enums.Direction.N;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
@@ -24,6 +25,7 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 	private Direction seenDirection;
 	private StickPosition seenStickPos;
 	private Direction directionAtSeenPoint;
+	private Direction[] directions = Direction.values();
 
 	public RoadCrossWithMan(Vector3f coordinates, AppContext context) {
 		super(coordinates, context);
@@ -31,22 +33,24 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 
 	@Override
 	public void addControls() {
-		trafficMan = addTrafficMan(N.getDegress());
+		int index = ThreadLocalRandom.current().nextInt(0, directions.length);
+		Direction startDirection = directions[index];
+		trafficMan = addTrafficMan(startDirection);
 		setupReturnPoints();
 	}
 
-	private TrafficMan addTrafficMan(int degress) {
+	private TrafficMan addTrafficMan(Direction startDirection) {
 		int x = (int) getCoordinates().x * DOUBLE_SCALE + SCALE;
 		int z = (int) getCoordinates().z * DOUBLE_SCALE - SCALE;
 		Spatial man = getAssetManager().loadModel("Models/man.j3o");
 		man.scale(1.0f, 1.0f, 1.0f);
-		man.setLocalRotation(new Quaternion().fromAngles(0, Utils.toRadians(degress), 0));
+		man.setLocalRotation(new Quaternion().fromAngles(0, Utils.toRadians(startDirection.getDegress()), 0));
 		man.setLocalTranslation(x, 0, z);
 		Utils.addCollisionShape(man, getBulletAppState());
 		getRootNode().attachChild(man);
 		man.setLocalRotation(new Quaternion().fromAngles(0, 0, 0));
 		((Node) man).getChild("stick").setLocalRotation(new Quaternion(new float[] { 0, 0, 0 }));
-		trafficMan = new TrafficMan(man, N, StickPosition.DOWN);
+		trafficMan = new TrafficMan(man, startDirection, StickPosition.DOWN);
 		Thread thread = new Thread(new ManPositionSwitcher(getContext().getMainApp(), trafficMan));
 		thread.setDaemon(true);
 		thread.start();

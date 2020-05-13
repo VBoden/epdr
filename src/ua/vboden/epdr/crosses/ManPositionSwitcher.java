@@ -29,7 +29,6 @@ public class ManPositionSwitcher implements Runnable {
 	private StickPosition[] samePosition = new StickPosition[] { DOWN, SIDE, BEFORE };
 	private Map<StickPosition, float[]> stickRotation;
 	private Map<StickPosition, Vector3f> stickTranslation;
-	private int prevDirectionIndex = -1;
 
 	public ManPositionSwitcher(AppStart mainApp, TrafficMan man) {
 		this.man = man;
@@ -63,9 +62,6 @@ public class ManPositionSwitcher implements Runnable {
 		int yellowTime = 5 * oneSec;
 		while (true) {
 			try {
-				Direction direction = directions[getDirectionIndex()];
-				rotateMan(direction);
-				man.setDirection(direction);
 				Thread.sleep(greenTime);
 				switchPosition(UP); // 8.8 в)
 				Thread.sleep(yellowTime);
@@ -73,6 +69,9 @@ public class ManPositionSwitcher implements Runnable {
 				Thread.sleep(redTime);
 				switchPosition(UP); // 8.8 в)
 				Thread.sleep(yellowTime);
+				Direction direction = getDirection();
+				rotateMan(direction);
+				man.setDirection(direction);
 				int position = ThreadLocalRandom.current().nextInt(0, 3);
 				switchPosition(samePosition[position]); // 8.8 а)
 			} catch (InterruptedException e) {
@@ -81,14 +80,14 @@ public class ManPositionSwitcher implements Runnable {
 		}
 	}
 
-	private int getDirectionIndex() {
+	private Direction getDirection() {
 		int index;
+		Direction newDirection;
 		do {
 			index = ThreadLocalRandom.current().nextInt(0, directions.length);
-		} while (index == prevDirectionIndex);
-		prevDirectionIndex = index;
-		System.out.println(index);
-		return index;
+			newDirection = directions[index];
+		} while (newDirection == man.getDirection());
+		return newDirection;
 	}
 
 	private void rotateMan(Direction direction) {
