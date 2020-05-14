@@ -20,6 +20,7 @@ import com.jme3.scene.Node;
 
 import ua.vboden.epdr.AppContext;
 import ua.vboden.epdr.Road;
+import ua.vboden.epdr.Utils;
 import ua.vboden.epdr.enums.Direction;
 
 public abstract class AbstractRoadCross {
@@ -62,6 +63,17 @@ public abstract class AbstractRoadCross {
 		int x = ((int) getCoordinates().x + xSign) * DOUBLE_SCALE + SCALE + xSign * dx;
 		int z = ((int) getCoordinates().z + zSign) * DOUBLE_SCALE - SCALE + zSign * dz;
 		return new Vector3f(x, 0, z);
+	}
+
+	protected boolean hasPassedStartControllPoint(float x, float z, Direction direction, float toLightDist) {
+		int xSign = (int) Utils.getXMoveMultDeg(direction.getDegress());
+		int zSign = (int) Utils.getZMoveMultDeg(direction.getDegress());
+		Vector3f position = getPointOnMap(direction);
+		int roadX = (int) (position.x / DOUBLE_SCALE);
+		int roadZ = (int) (position.z / DOUBLE_SCALE);
+		x += xSign * toLightDist;
+		z += zSign * toLightDist;
+		return xSign * (x - roadX) + zSign * (z - roadZ) > 0;
 	}
 
 	public Node getRootNode() {

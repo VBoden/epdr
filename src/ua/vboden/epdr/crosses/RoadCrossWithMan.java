@@ -2,7 +2,6 @@ package ua.vboden.epdr.crosses;
 
 import static ua.vboden.epdr.Constants.DOUBLE_SCALE;
 import static ua.vboden.epdr.Constants.SCALE;
-import static ua.vboden.epdr.enums.Direction.N;
 
 import java.util.Arrays;
 import java.util.List;
@@ -59,19 +58,12 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 
 	@Override
 	public Boolean passedCross(Direction direction, Road rememberedRoad, int x, int z) {
-//		if (this.equals(getContext().getPassedCross()))
-//			return null;
 		if (directionAtSeenPoint == null) {
 			directionAtSeenPoint = direction;
 		}
-		int xSign = (int) Utils.getXMoveMultDeg(directionAtSeenPoint.getDegress());
-		int zSign = (int) Utils.getZMoveMultDeg(directionAtSeenPoint.getDegress());
-		Vector3f position = getPointOnMap(directionAtSeenPoint);
-		int roadX = (int) (position.x / DOUBLE_SCALE);
-		int roadZ = (int) (position.z / DOUBLE_SCALE);
-		float toLightDist = 0f;
-		boolean passedLightsSeenPoint = hasPassedLights(x + xSign * toLightDist, z + zSign * toLightDist, xSign, zSign,
-				roadX, roadZ);
+		float toControllPointDistance = 0f;
+		boolean passedLightsSeenPoint = hasPassedStartControllPoint(x, z, directionAtSeenPoint,
+				toControllPointDistance);
 		int diffMyDirection = direction.getDegress() - directionAtSeenPoint.getDegress();
 		System.out.println("           ----------" + x + " " + z + " " + direction);
 		if (!passedLightsSeenPoint && Math.abs(diffMyDirection) != 180) {
@@ -109,10 +101,6 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 			}
 		}
 		return null;
-	}
-
-	private boolean hasPassedLights(float x, float z, int xSign, int zSign, int roadX, int roadZ) {
-		return xSign * (x - roadX) + zSign * (z - roadZ) > 0;
 	}
 
 	@Override

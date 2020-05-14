@@ -63,26 +63,15 @@ public class RoadCrossWithLights extends AbstractRoadCross {
 
 	@Override
 	public Boolean passedCross(Direction direction, Road rememberedRoad, int x, int z) {
-		if (this.equals(getContext().getPassedCross()))
-			return null;
-		int xSign = (int) Utils.getXMoveMultDeg(direction.getDegress());
-		int zSign = (int) Utils.getZMoveMultDeg(direction.getDegress());
-		Vector3f position = lights.get(direction).getLights().getLocalTranslation();
-		int roadX = (int) (position.x / DOUBLE_SCALE);
-		int roadZ = (int) (position.z / DOUBLE_SCALE);
-		boolean passedLights = hasPassedLights(x + xSign, z + zSign, xSign, zSign, roadX, roadZ);
+		boolean passedLights = hasPassedStartControllPoint(x, z, direction, 1);
 		float toLightDist = 1f;
-		boolean passedLightsSeenPoint = hasPassedLights(x + xSign * toLightDist, z + zSign * toLightDist, xSign, zSign,
-				roadX, roadZ);
+		boolean passedLightsSeenPoint = hasPassedStartControllPoint(x, z, direction, toLightDist);
+		System.out.println("========================" + passedLights + " " + passedLightsSeenPoint);
 		if (!passedLights && !passedLightsSeenPoint)
 			seenColor = lights.get(direction).getColor();
 		if (passedLights)
 			return Color.GREEN.equals(seenColor);
 		return null;
-	}
-
-	private boolean hasPassedLights(float x, float z, int xSign, int zSign, int roadX, int roadZ) {
-		return xSign * (x - roadX) + zSign * (z - roadZ) > 0;
 	}
 
 	@Override
