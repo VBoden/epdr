@@ -128,13 +128,12 @@ public class AppStart extends SimpleApplication implements ActionListener/* , Sc
 		context.setBulletAppState(bulletAppState);
 		context.setPlayer(player);
 		context.setCam(cam);
-//		modelsManager = new ModelsManager(context);
-//		modelsManager.addModels();
-//		movingManager = new MovingManager(context);
+		modelsManager = new ModelsManager(context);
+		modelsManager.addModels();
+		movingManager = new MovingManager(context);
 
 		NiftyManager niftyManager = new NiftyManager(assetManager, inputManager, audioRenderer, guiViewPort, context);
 		context.setNiftyManager(niftyManager);
-		niftyManager.showPopupByKey("8.8.a_back");
 	}
 
 	private void setUpPlayer() {

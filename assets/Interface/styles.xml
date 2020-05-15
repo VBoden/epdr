@@ -5,7 +5,7 @@
 	</style>
 	
 	<style id="message-panel">
-		<attributes width="70%" height="50%" childLayout="vertical"
+		<attributes width="70%" height="70%" childLayout="vertical"
 			align="center" valign="center" padding="15px"
 			backgroundImage="panel/nifty-panel-hint.png"
 			imageMode="resize:8,210,8,8,8,210,8,209,8,210,8,8" />
@@ -14,9 +14,9 @@
 	<style id="message-text">
 		<attributes font="Interface/Fonts/Academy3.fnt"
 			color="#000f"
-			text="Привітf ddddddddddddddddddddddddd ddddddddddddddddddddddddd"
+			text="Привіт"
 			align="center" valign="center" height="100%" width="95%" wrap="true"
-			textHAlign="left" textVAlign="top" textMinHeight="300px" />
+			textHAlign="left" textVAlign="top" textMinHeight="450px" />
 	</style>
 
 	<style id="ok-button#panel">

@@ -43,13 +43,21 @@ public class NiftyManager {
 		guiViewPort.addProcessor(niftyDisplay);
 	}
 
-	public void showPopupByKey(String key) {
+	public void showPopup() {
+		String key = context.getBreakedRuleKey();
+		if (key != null) {
+			showPopupByKey(key);
+			context.setBreakedRuleKey(null);
+		}
+	}
+
+	private void showPopupByKey(String key) {
 		ResourceBundle rb = ResourceBundle.getBundle("ua.vboden.epdr.nifty.rules_text");
 		String ruleText = rb.getString(key);
 		showPopup(ruleText);
 	}
 
-	public void showPopup(String message) {
+	private void showPopup(String message) {
 		nifty.addXml("Interface/popup.xml");
 		Element popupElement = nifty.createPopup("popupExit");
 		Element text = popupElement.findElementById("text");

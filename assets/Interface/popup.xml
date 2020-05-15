@@ -9,7 +9,6 @@
 		<text id="text" style="message-text" />
 			<control id="setInfo" name="button" label="Запам'ятав)"
 				style="ok-button">
-				<panel widht="50%"/>
 				<interact onClick="close(this)" />
 			</control>
 		</panel>

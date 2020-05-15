@@ -26,6 +26,7 @@ public class AppContext {
 	private float speed = 0f;
 	private AbstractRoadCross passedCross;
 	private NiftyManager niftyManager;
+	private String breakedRuleKey;
 
 	public AppStart getMainApp() {
 		return mainApp;
@@ -125,6 +126,14 @@ public class AppContext {
 
 	public void setNiftyManager(NiftyManager niftyManager) {
 		this.niftyManager = niftyManager;
+	}
+
+	public String getBreakedRuleKey() {
+		return breakedRuleKey;
+	}
+
+	public void setBreakedRuleKey(String breakedRuleKey) {
+		this.breakedRuleKey = breakedRuleKey;
 	}
 
 }
