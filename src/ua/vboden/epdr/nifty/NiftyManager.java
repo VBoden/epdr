@@ -1,5 +1,7 @@
 package ua.vboden.epdr.nifty;
 
+import java.util.ResourceBundle;
+
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioRenderer;
 import com.jme3.input.InputManager;
@@ -9,24 +11,29 @@ import com.jme3.renderer.ViewPort;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.TextRenderer;
-import de.lessvoid.nifty.screen.Screen;
 import ua.vboden.epdr.AppContext;
-import ua.vboden.epdr.AppStart;
 
 public class NiftyManager {
 
 	private Nifty nifty;
-	private Screen screen;
 	private AppContext context;
-	private AppStart mainApp;
+	private AssetManager assetManager;
+	private InputManager inputManager;
+	private AudioRenderer audioRenderer;
+	private ViewPort guiViewPort;
+	private String popupId;
 
-	public NiftyManager(AppContext context) {
+	public NiftyManager(AssetManager assetManager, InputManager inputManager, AudioRenderer audioRenderer,
+			ViewPort guiViewPort, AppContext context) {
+		this.assetManager = assetManager;
+		this.inputManager = inputManager;
+		this.audioRenderer = audioRenderer;
+		this.guiViewPort = guiViewPort;
 		this.context = context;
-		this.mainApp = context.getMainApp();
+		createScreen();
 	}
 
-	public void createScreen(AssetManager assetManager, InputManager inputManager, AudioRenderer audioRenderer,
-			ViewPort guiViewPort) {
+	private void createScreen() {
 		NiftyJmeDisplay niftyDisplay = NiftyJmeDisplay.newNiftyJmeDisplay(assetManager, inputManager, audioRenderer,
 				guiViewPort);
 		nifty = niftyDisplay.getNifty();
@@ -34,15 +41,12 @@ public class NiftyManager {
 
 		nifty.fromXml("Interface/screen.xml", "empty", sc);
 		guiViewPort.addProcessor(niftyDisplay);
+	}
 
-		nifty.addXml("Interface/popup.xml");
-		Element popupElement = nifty.createPopup("popupExit");
-		Element text = popupElement.findElementById("text");
-		TextRenderer textRenderer = text.getRenderer(TextRenderer.class);
-//		textRenderer.setText("ffffffffffffffffff");
-		nifty.showPopup(nifty.getCurrentScreen(), popupElement.getId(), null);
-		context.setPopupId(popupElement.getId());
-
+	public void showPopupByKey(String key) {
+		ResourceBundle rb = ResourceBundle.getBundle("ua.vboden.epdr.nifty.rules_text");
+		String ruleText = rb.getString(key);
+		showPopup(ruleText);
 	}
 
 	public void showPopup(String message) {
@@ -52,7 +56,10 @@ public class NiftyManager {
 		TextRenderer textRenderer = text.getRenderer(TextRenderer.class);
 		textRenderer.setText(message);
 		nifty.showPopup(nifty.getCurrentScreen(), popupElement.getId(), null);
-		context.setPopupId(popupElement.getId());
+		popupId = popupElement.getId();
 	}
 
+	public String getPopupId() {
+		return popupId;
+	}
 }

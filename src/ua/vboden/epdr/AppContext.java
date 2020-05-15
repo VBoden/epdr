@@ -10,6 +10,7 @@ import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 
 import ua.vboden.epdr.crosses.AbstractRoadCross;
+import ua.vboden.epdr.nifty.NiftyManager;
 
 public class AppContext {
 
@@ -24,7 +25,7 @@ public class AppContext {
 	private float angle = 0;
 	private float speed = 0f;
 	private AbstractRoadCross passedCross;
-	private String popupId;
+	private NiftyManager niftyManager;
 
 	public AppStart getMainApp() {
 		return mainApp;
@@ -118,12 +119,12 @@ public class AppContext {
 		this.speed = speed;
 	}
 
-	public void setPopupId(String id) {
-		popupId = id;
+	public NiftyManager getNiftyManager() {
+		return niftyManager;
 	}
 
-	public String getPopupId() {
-		return popupId;
+	public void setNiftyManager(NiftyManager niftyManager) {
+		this.niftyManager = niftyManager;
 	}
 
 }

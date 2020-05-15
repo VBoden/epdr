@@ -132,8 +132,9 @@ public class AppStart extends SimpleApplication implements ActionListener/* , Sc
 //		modelsManager.addModels();
 //		movingManager = new MovingManager(context);
 
-		new NiftyManager(context).createScreen(assetManager, inputManager, audioRenderer, guiViewPort);
-
+		NiftyManager niftyManager = new NiftyManager(assetManager, inputManager, audioRenderer, guiViewPort, context);
+		context.setNiftyManager(niftyManager);
+		niftyManager.showPopupByKey("8.8.a_back");
 	}
 
 	private void setUpPlayer() {
