@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty xmlns="http://nifty-gui.lessvoid.com/nifty-gui">
+	<useStyles filename="Interface/styles.xml" />
+	<!-- <style id="base-font"> <attributes font="font.fnt"/> </style> -->
+	<popup id="popupExit" childLayout="center"
+		controller="ua.vboden.epdr.nifty.NiftyScreenController">
+
+	<panel style="message-panel">
+		<text id="text" style="message-text" />
+			<control id="setInfo" name="button" label="Запам'ятав)"
+				style="ok-button">
+				<panel widht="50%"/>
+				<interact onClick="close(this)" />
+			</control>
+		</panel>
+	</popup>
+</nifty>

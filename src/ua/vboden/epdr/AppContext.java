@@ -24,6 +24,7 @@ public class AppContext {
 	private float angle = 0;
 	private float speed = 0f;
 	private AbstractRoadCross passedCross;
+	private String popupId;
 
 	public AppStart getMainApp() {
 		return mainApp;
@@ -115,6 +116,14 @@ public class AppContext {
 
 	public void setSpeed(float speed) {
 		this.speed = speed;
+	}
+
+	public void setPopupId(String id) {
+		popupId = id;
+	}
+
+	public String getPopupId() {
+		return popupId;
 	}
 
 }

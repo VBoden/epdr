@@ -1,6 +1,5 @@
 package ua.vboden.epdr;
 
-import static ua.vboden.epdr.Constants.CROSS_PASSED_RADIUS;
 import static ua.vboden.epdr.Constants.DOUBLE_SCALE;
 
 import java.math.BigDecimal;
@@ -29,11 +28,9 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
 
-import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.screen.Screen;
-import de.lessvoid.nifty.screen.ScreenController;
+import ua.vboden.epdr.nifty.NiftyManager;
 
-public class AppStart extends SimpleApplication implements ActionListener, ScreenController {
+public class AppStart extends SimpleApplication implements ActionListener/* , ScreenController */ {
 
 	private static final String KEY_D = "d";
 	private static final String KEY_A = "a";
@@ -96,8 +93,6 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 	private int moveManagTriggerCounter = 0;
 	Vector3f startLocation = new Vector3f(DOUBLE_SCALE, 10, 0);
 
-	private Nifty nifty;
-
 	public static void main(String[] args) {
 		AppStart app = new AppStart();
 		app.setShowSettings(false);
@@ -133,9 +128,12 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 		context.setBulletAppState(bulletAppState);
 		context.setPlayer(player);
 		context.setCam(cam);
-		modelsManager = new ModelsManager(context);
-		modelsManager.addModels();
-		movingManager = new MovingManager(context);
+//		modelsManager = new ModelsManager(context);
+//		modelsManager.addModels();
+//		movingManager = new MovingManager(context);
+
+		new NiftyManager(context).createScreen(assetManager, inputManager, audioRenderer, guiViewPort);
+
 	}
 
 	private void setUpPlayer() {
@@ -234,7 +232,7 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 		} else
 			walkDirection.addLocal(camDir);
 
-		player.setWalkDirection(walkDirection);
+//		player.setWalkDirection(walkDirection);
 		Vector3f physicsLocation = player.getPhysicsLocation();
 		cam.setLocation(physicsLocation);
 		if (moveManagTriggerCounter % 10 == 0 && Utils.isOutOfSquare(startLocation, physicsLocation))
@@ -276,22 +274,23 @@ public class AppStart extends SimpleApplication implements ActionListener, Scree
 //        //TODO: add render code
 //    }
 
-	@Override
-	public void bind(Nifty nifty, Screen screen) {
-		System.out.println("bind( " + screen.getScreenId() + ")");
-	}
-
-	@Override
-	public void onStartScreen() {
-		System.out.println("onStartScreen");
-	}
-
-	@Override
-	public void onEndScreen() {
-		System.out.println("onEndScreen");
-	}
-
-	public void quit() {
-		nifty.gotoScreen("end");
-	}
+//	@Override
+//	public void bind(Nifty nifty, Screen screen) {
+//		this.screen = screen;
+//		System.out.println("bind( " + screen.getScreenId() + ")");
+//	}
+//
+//	@Override
+//	public void onStartScreen() {
+//		System.out.println("onStartScreen");
+//	}
+//
+//	@Override
+//	public void onEndScreen() {
+//		System.out.println("onEndScreen");
+//	}
+//
+//	public void quit() {
+//		nifty.gotoScreen("end");
+//	}
 }

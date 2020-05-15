@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty-styles>
+	<style id="button-font">
+		<attributes font="Interface/Fonts/Academy3.fnt" />
+	</style>
+	
+	<style id="message-panel">
+		<attributes width="70%" height="50%" childLayout="vertical"
+			align="center" valign="center" padding="15px"
+			backgroundImage="panel/nifty-panel-hint.png"
+			imageMode="resize:8,210,8,8,8,210,8,209,8,210,8,8" />
+	</style>
+
+	<style id="message-text">
+		<attributes font="Interface/Fonts/Academy3.fnt"
+			color="#000f"
+			text="Привітf ddddddddddddddddddddddddd ddddddddddddddddddddddddd"
+			align="center" valign="center" height="100%" width="95%" wrap="true"
+			textHAlign="left" textVAlign="top" textMinHeight="300px" />
+	</style>
+
+	<style id="ok-button#panel">
+		<attributes backgroundImage="button/button.png"
+			imageMode="resize:150,23,0,2,96,2,2,2,96,2,19,2,96,2,2"
+			paddingLeft="7px" paddingRight="7px" width="150px" height="33px"
+			childLayout="center" visibleToMouse="true" align="center"
+			valign="center" />
+	</style>
+	<style id="ok-button#text" base="nifty-button#text">
+	</style>
+
+<!-- <style id="nifty-button#panel">
+        <attributes backgroundImage="button/button.png" imageMode="sprite-resize:100,23,0,2,96,2,2,2,96,2,19,2,96,2,2"
+                    paddingLeft="7px" paddingRight="7px" width="100px" height="23px" childLayout="center"
+                    visibleToMouse="true" backgroundColor="#080f"/>
+        <effect>
+            <onHover name="border" color="#822f" post="true"/>
+            <onFocus name="imageOverlay" filename="button/button.png"
+                     imageMode="sprite-resize:100,23,1,2,96,2,2,2,96,2,19,2,96,2,2" post="true"/>
+            <onEnabled name="renderQuad" startColor="#2228" endColor="#2220" post="true" length="150"/>
+            <onDisabled name="renderQuad" startColor="#2220" endColor="#2228" post="true" length="150"/>
+        </effect>
+    </style> 
+        <style id="nifty-button#text" base="button-font">
+        <attributes align="center" valign="center" textHAlign="center" textVAlign="center" visibleToMouse="false"/>
+        <effect>
+            <onEnabled name="textColorAnimated" startColor="#8886" endColor="#eeef" post="false" length="150"/>
+            <onDisabled name="textColorAnimated" startColor="#eeef" endColor="#8886" post="false" length="150"/>
+        </effect>
+    </style>
+    -->
+</nifty-styles>
