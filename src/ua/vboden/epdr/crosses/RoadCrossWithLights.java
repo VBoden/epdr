@@ -66,7 +66,7 @@ public class RoadCrossWithLights extends AbstractRoadCross {
 		boolean passedLights = hasPassedStartControllPoint(x, z, direction, 1);
 		float toLightDist = 1f;
 		boolean passedLightsSeenPoint = hasPassedStartControllPoint(x, z, direction, toLightDist);
-		System.out.println("====================" + direction + "====" + passedLights + " " + passedLightsSeenPoint);
+//		System.out.println("====================" + direction + "====" + passedLights + " " + passedLightsSeenPoint);
 		if (!passedLights && !passedLightsSeenPoint)
 			seenColor = lights.get(direction).getColor();
 		if (passedLights) {

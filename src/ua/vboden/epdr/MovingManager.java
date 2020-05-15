@@ -50,24 +50,23 @@ public class MovingManager {
 			rememberedCross = cross;
 			dirAtStartCrossing = lastNotNullDirection;
 		}
-		System.out.println(rememberedCross);
+//		System.out.println(rememberedCross);
 		if (rememberedCross != null) {
 			Boolean passed = rememberedCross.passedCross(lastNotNullDirection, lastNotNullRoad, x, z);
 			if (passed == null) {
-				System.out.println("                  NULL " + rememberedCross);
-				System.out.println("                       " + dirAtStartCrossing + " " + x + " " + z);
+//				System.out.println("                  NULL " + rememberedCross);
+//				System.out.println("                       " + dirAtStartCrossing + " " + x + " " + z);
 				return;
 			}
 			rememberedCross.resetCheckState();
-//				System.out.println("passed");
 			if (passed) {
-				System.out.println("PASSED___ " + rememberedCross);
-				System.out.println(dirAtStartCrossing + " " + x + " " + z);
+//				System.out.println("PASSED___ " + rememberedCross);
+//				System.out.println(dirAtStartCrossing + " " + x + " " + z);
 				context.setPassedCross(rememberedCross);
 				rememberedCross = null;
 			} else {
-				System.out.println(rememberedCross);
-				System.out.println(dirAtStartCrossing + " " + x + " " + z);
+//				System.out.println(rememberedCross);
+//				System.out.println(dirAtStartCrossing + " " + x + " " + z);
 				context.setSpeed(0);
 				float radians = Utils.toRadians(dirAtStartCrossing.getDegress());
 				context.setAngle(radians);
@@ -81,26 +80,6 @@ public class MovingManager {
 			}
 		}
 	}
-
-//	passed2
-//	AbstractRoadCross [members=[0, 6] coordinates=(1.0, 0.0, 1.0)]
-//	E 3 1
-//	AbstractRoadCross [members=[0, 6] coordinates=(1.0, 0.0, 1.0)]
-//	E 3 1
-//	AbstractRoadCross [members=[0, 6] coordinates=(1.0, 0.0, 1.0)]
-//	E 3 1
-//	passed2
-//	AbstractRoadCross [members=[2, 6] coordinates=(20.0, 0.0, 1.0)]
-//	N 1 1
-//	passed2
-//	AbstractRoadCross [members=[3, 6] coordinates=(40.0, 0.0, 1.0)]
-//	N 20 -1
-//	passed2
-//	AbstractRoadCross [members=[6, 4] coordinates=(60.0, 0.0, 1.0)]
-//	N 40 -1
-//	passed2
-//	AbstractRoadCross [members=[5, 6] coordinates=(80.0, 0.0, 1.0)]
-//	N 60 -1
 
 	private Road findRoad(int x, int z) {
 		if (lastNotNullRoad != null && roadCorrespondsDirection(lastNotNullRoad) && lastNotNullRoad.hasPoint(x, z)) {
