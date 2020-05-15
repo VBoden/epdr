@@ -41,6 +41,7 @@ public class NiftyManager {
 
 		nifty.fromXml("Interface/screen.xml", "empty", sc);
 		guiViewPort.addProcessor(niftyDisplay);
+		nifty.addXml("Interface/popup.xml");
 	}
 
 	public void showPopup() {
@@ -58,7 +59,6 @@ public class NiftyManager {
 	}
 
 	private void showPopup(String message) {
-		nifty.addXml("Interface/popup.xml");
 		Element popupElement = nifty.createPopup("popupExit");
 		Element text = popupElement.findElementById("text");
 		TextRenderer textRenderer = text.getRenderer(TextRenderer.class);
@@ -69,5 +69,9 @@ public class NiftyManager {
 
 	public String getPopupId() {
 		return popupId;
+	}
+
+	public void setPopupId(String popupId) {
+		this.popupId = null;
 	}
 }

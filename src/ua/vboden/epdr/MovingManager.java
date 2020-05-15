@@ -77,6 +77,7 @@ public class MovingManager {
 				float x0 = onMap.x - Utils.getXMoveMult(radians) * Constants.RETURN_DISTANCE;
 				float z0 = onMap.z - Utils.getZMoveMult(radians) * Constants.RETURN_DISTANCE;
 				context.getPlayer().setPhysicsLocation(new Vector3f(x0, 1, z0));
+				context.getNiftyManager().showPopup();
 			}
 		}
 	}

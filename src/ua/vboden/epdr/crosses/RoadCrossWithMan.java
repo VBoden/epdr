@@ -74,16 +74,24 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 			System.out.println("           ----------" + seenStickPos + " " + seenDirection + " " + directionAtSeenPoint
 					+ " " + direction);
 		} else if (seenDirection != null) {
-			if (StickPosition.UP.equals(seenStickPos) || seenDirection.equals(directionAtSeenPoint))
+			if (seenDirection.equals(directionAtSeenPoint)) {
+				getContext().setBreakedRuleKey("8.8.all_back");
 				return false;
+			}
+			if (StickPosition.UP.equals(seenStickPos)) {
+				getContext().setBreakedRuleKey("8.8.c");
+				return false;
+			}
 			int diff = seenDirection.getDegress() - directionAtSeenPoint.getDegress();
 			if (diff == 90 || diff == -270) { // move from left
 				if (StickPosition.FORWARD.equals(seenStickPos))
 					return true;
 			}
 			if (diff == -90 || diff == 270) { // move from right
-				if (StickPosition.FORWARD.equals(seenStickPos))
+				if (StickPosition.FORWARD.equals(seenStickPos)) {
+					getContext().setBreakedRuleKey("8.8.b_right");
 					return false;
+				}
 			}
 			if (Utils.isOutOfSquare(getCoordinates(), new Vector3f(x, 0, z)) || Math.abs(diffMyDirection) == 180) {
 				if (StickPosition.DOWN.equals(seenStickPos) || StickPosition.SIDE.equals(seenStickPos)
@@ -92,11 +100,20 @@ public class RoadCrossWithMan extends AbstractRoadCross {
 					if ((diff != 0 && Math.abs(diff) != 180) && turnRightOrForward.contains(diffMyDirection)) {
 						return true;
 					} else {
+						if (diff == 0 || Math.abs(diff) == 180) {
+							getContext().setBreakedRuleKey("8.8.a_2");
+						} else {
+							getContext().setBreakedRuleKey("8.8.a_1");
+						}
 						return false;
 					}
 				}
-				if (StickPosition.FORWARD.equals(seenStickPos)) {// only move to man left not considered
-					return diffMyDirection == -90 || diffMyDirection == 270;
+				if (StickPosition.FORWARD.equals(seenStickPos)) {// only move to man left not considered here
+					boolean isTurningRight = diffMyDirection == -90 || diffMyDirection == 270;
+					if (!isTurningRight) {
+						getContext().setBreakedRuleKey("8.8.b");
+					}
+					return isTurningRight;
 				}
 			}
 		}

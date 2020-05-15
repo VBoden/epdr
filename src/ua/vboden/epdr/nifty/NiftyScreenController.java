@@ -32,6 +32,9 @@ public class NiftyScreenController implements ScreenController {
 	}
 
 	public void close() {
-		nifty.closePopup(context.getNiftyManager().getPopupId());
+		String popupId = context.getNiftyManager().getPopupId();
+		if (popupId != null)
+			nifty.closePopup(popupId);
+		context.getNiftyManager().setPopupId(null);
 	}
 }

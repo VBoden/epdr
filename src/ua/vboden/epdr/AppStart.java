@@ -30,7 +30,7 @@ import com.jme3.system.AppSettings;
 
 import ua.vboden.epdr.nifty.NiftyManager;
 
-public class AppStart extends SimpleApplication implements ActionListener/* , ScreenController */ {
+public class AppStart extends SimpleApplication implements ActionListener {
 
 	private static final String KEY_D = "d";
 	private static final String KEY_A = "a";
@@ -99,7 +99,7 @@ public class AppStart extends SimpleApplication implements ActionListener/* , Sc
 		AppSettings settings2 = new AppSettings(true);
 		settings2.put("Width", 1024);
 		settings2.put("Height", 768);
-		settings2.put("Title", "eeee");
+		settings2.put("Title", "е-ПДР");
 		app.setSettings(settings2);
 		app.setDisplayStatView(false);
 		app.setDisplayFps(false);
@@ -200,6 +200,7 @@ public class AppStart extends SimpleApplication implements ActionListener/* , Sc
 
 	@Override
 	public void simpleUpdate(float tpf) {
+
 		if (keyValues.get(KEY_BACKSPACE) > 0) {
 			restartMove();
 			return;
@@ -210,6 +211,8 @@ public class AppStart extends SimpleApplication implements ActionListener/* , Sc
 		if (keyValues.get(KEY_S) > 0) {
 			speed = new BigDecimal(speed * 0.9f).setScale(2, BigDecimal.ROUND_DOWN).floatValue();
 		}
+		if (context.getNiftyManager().getPopupId() != null)
+			speed = 0;
 		context.setSpeed(speed);
 
 		DecimalFormat df = new DecimalFormat("#.#");
@@ -232,7 +235,7 @@ public class AppStart extends SimpleApplication implements ActionListener/* , Sc
 		} else
 			walkDirection.addLocal(camDir);
 
-//		player.setWalkDirection(walkDirection);
+		player.setWalkDirection(walkDirection);
 		Vector3f physicsLocation = player.getPhysicsLocation();
 		cam.setLocation(physicsLocation);
 		if (moveManagTriggerCounter % 10 == 0 && Utils.isOutOfSquare(startLocation, physicsLocation))
