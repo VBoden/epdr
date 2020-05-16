@@ -10,11 +10,15 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.material.Material;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Quad;
+import com.jme3.texture.Texture;
+import com.jme3.texture.Texture.WrapMode;
 
 import ua.vboden.epdr.crosses.AbstractRoadCross;
 
@@ -125,10 +129,19 @@ public class ModelsManager {
 	}
 
 	private void addBuilding(int x, int y, int z) {
-		Spatial building = assetManager.loadModel("Models/building.j3o");
-		int height = 5 + rand.nextInt(20);
-		Vector3f scale = new Vector3f(SCALE, height, SCALE);
-		Vector3f translation = new Vector3f(x, y, z);
+		Material material = assetManager.loadMaterial("Materials/green.j3m");
+		Texture texture = assetManager.loadTexture("Materials/building.png");
+		texture.setWrap(WrapMode.Repeat);
+		material.setTexture("DiffuseMap", texture);
+
+		int height = 2 + rand.nextInt(10);
+		Box box = new Box(1, 1, 1);
+		Geometry building = new Geometry("Building", box);
+		building.setMaterial(material);
+		building.getMesh().scaleTextureCoordinates(new Vector2f(1, height));
+
+		Vector3f scale = new Vector3f(SCALE, height * SCALE, SCALE);
+		Vector3f translation = new Vector3f(x, y + height * SCALE, z);
 		addModel(building, scale, translation);
 	}
 
