@@ -7,6 +7,10 @@ import java.util.Random;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
+import com.jme3.bullet.control.VehicleControl;
+import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.material.Material;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
@@ -21,6 +25,8 @@ import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 
 import ua.vboden.epdr.crosses.AbstractRoadCross;
+import ua.vboden.epdr.crosses.Car;
+import ua.vboden.epdr.crosses.CarMover;
 
 public class ModelsManager {
 
@@ -40,7 +46,9 @@ public class ModelsManager {
 	public void addModels() {
 		createRoads();
 		addControlsToRoadCrosses();
-		addCar(15, 1, 40);
+		Thread thread = new Thread(new CarMover(context, addCar(15, 1, 40)));
+		thread.setDaemon(true);
+		thread.start();
 	}
 
 	private void createRoads() {
@@ -155,14 +163,6 @@ public class ModelsManager {
 		addModel(tree, scale, translation);
 	}
 
-	private void addCar(int x, int y, int z) {
-		Spatial car = assetManager.loadModel("Models/car.j3o");
-		car.setLocalRotation(new Quaternion().fromAngles(0, Utils.toRadians(-90), 0));
-		Vector3f scale = new Vector3f(1, 1, 1);
-		Vector3f translation = new Vector3f(x, y, z);
-		addModel(car, scale, translation);
-	}
-
 	private void addModel(Spatial model, Vector3f scale, Vector3f translation) {
 		model.setLocalScale(scale);
 		translation.x += SCALE;
@@ -171,6 +171,24 @@ public class ModelsManager {
 		Utils.addCollisionShape(model, bulletAppState);
 
 		rootNode.attachChild(model);
+	}
+
+	private Car addCar(int x, int y, int z) {
+		Spatial car = assetManager.loadModel("Models/car.j3o");
+		car.setLocalRotation(new Quaternion().fromAngles(0, Utils.toRadians(-90), 0));
+		Vector3f scale = new Vector3f(1, 1, 1);
+		Vector3f translation = new Vector3f(x, y, z);
+		car.setLocalScale(scale);
+		translation.x += SCALE;
+		translation.z -= SCALE;
+		car.setLocalTranslation(translation);
+		CollisionShape carShape = CollisionShapeFactory.createDynamicMeshShape(car);
+		VehicleControl control = new VehicleControl(carShape, 0);
+		car.addControl(control);
+		bulletAppState.getPhysicsSpace().add(control);
+
+		rootNode.attachChild(car);
+		return new Car(car, (CompoundCollisionShape) carShape);
 	}
 
 	private void addControlsToRoadCrosses() {
