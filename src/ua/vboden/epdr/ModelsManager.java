@@ -40,6 +40,7 @@ public class ModelsManager {
 	public void addModels() {
 		createRoads();
 		addControlsToRoadCrosses();
+		addCar(15, 1, 40);
 	}
 
 	private void createRoads() {
@@ -152,6 +153,14 @@ public class ModelsManager {
 		z += -SCALE + 2 + rand.nextInt(2 * SCALE - 2);
 		Vector3f translation = new Vector3f(x, y, z);
 		addModel(tree, scale, translation);
+	}
+
+	private void addCar(int x, int y, int z) {
+		Spatial car = assetManager.loadModel("Models/car.j3o");
+		car.setLocalRotation(new Quaternion().fromAngles(0, Utils.toRadians(-90), 0));
+		Vector3f scale = new Vector3f(1, 1, 1);
+		Vector3f translation = new Vector3f(x, y, z);
+		addModel(car, scale, translation);
 	}
 
 	private void addModel(Spatial model, Vector3f scale, Vector3f translation) {
