@@ -205,7 +205,7 @@ public class AppStart extends SimpleApplication implements ActionListener {
 			restartMove();
 			return;
 		}
-		speed = (float) (context.getSpeed() + 0.02 * (keyValues.get(KEY_UP) - keyValues.get(KEY_DOWN)));
+		speed = (float) (context.getSpeed() + 0.01 * (keyValues.get(KEY_UP) - keyValues.get(KEY_DOWN)));
 		if (speed < 0)
 			speed = 0;
 		if (keyValues.get(KEY_S) > 0) {
@@ -217,7 +217,7 @@ public class AppStart extends SimpleApplication implements ActionListener {
 
 		DecimalFormat df = new DecimalFormat("#.#");
 		df.setRoundingMode(RoundingMode.CEILING);
-		hudText.setText("Швидкість: " + df.format(100 * speed) + " км/год");
+		hudText.setText("Швидкість: " + df.format(50 * speed) + " км/год");
 
 		float angleDegrees = keyValues.get(KEY_LEFT) - keyValues.get(KEY_RIGHT);
 		if (angleDegrees != 0) {
@@ -271,29 +271,4 @@ public class AppStart extends SimpleApplication implements ActionListener {
 			}
 		}
 	}
-
-//    @Override
-//    public void simpleRender(RenderManager rm) {
-//        //TODO: add render code
-//    }
-
-//	@Override
-//	public void bind(Nifty nifty, Screen screen) {
-//		this.screen = screen;
-//		System.out.println("bind( " + screen.getScreenId() + ")");
-//	}
-//
-//	@Override
-//	public void onStartScreen() {
-//		System.out.println("onStartScreen");
-//	}
-//
-//	@Override
-//	public void onEndScreen() {
-//		System.out.println("onEndScreen");
-//	}
-//
-//	public void quit() {
-//		nifty.gotoScreen("end");
-//	}
 }
