@@ -28,25 +28,22 @@ public class ArcFilled extends Mesh {
 	}
 
 	public ArcFilled(float x, float y, float z, float radius, float startAngle, float angleSize) {
+		this(x, y, z, radius, startAngle, angleSize, CIRCLE_POINTS);
+	}
+
+	public ArcFilled(float x, float y, float z, float radius, float startAngle, float angleSize, int circlePoints) {
 		this.startAngle = startAngle;
 		this.angleSize = angleSize;
-		updateGeometry(x, y, z, radius);
-	}
-
-	public ArcFilled(float radius) {
-		updateGeometry(radius);
-	}
-
-	public void updateGeometry(float radius) {
-		updateGeometry(0, 0, 0, radius);
-	}
-
-	public void updateGeometry(float x, float y, float z, float radius) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.radius = radius;
+		this.circlePoints = circlePoints;
 		setMode(Mode.TriangleFan);
+		updateGeometry();
+	}
+
+	public void updateGeometry() {
 
 		int points = (int) (circlePoints * angleSize / 360);
 		float[] coordinates = new float[3 * points + 6];

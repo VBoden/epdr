@@ -17,16 +17,16 @@ public class ArcDashed extends Arc {
 	protected ArcDashed() {
 	}
 
-	public ArcDashed(float x, float y, float z, float radius, float lineWidth, float startAngle, float angleSize) {
+	public ArcDashed(float x, float y, float z, float radius, float lineWidth, float startAngle, float angleSize,
+			int dashSize) {
 		super(x, y, z, radius, lineWidth, startAngle, angleSize);
+		this.dashSize = dashSize;
 	}
 
-	public ArcDashed(float radius, float lineWidth) {
-		super(radius, lineWidth);
-	}
-
-	public ArcDashed(float radius) {
-		super(radius, 0.1f);
+	public ArcDashed(float x, float y, float z, float radius, float lineWidth, float startAngle, float angleSize,
+			int circlePoints, int dashSize) {
+		super(x, y, z, radius, lineWidth, startAngle, angleSize, circlePoints);
+		this.dashSize = dashSize;
 	}
 
 	@Override
@@ -51,10 +51,6 @@ public class ArcDashed extends Arc {
 			return i + 6;
 		}
 		return i;
-	}
-
-	public void setDashSize(int dashSize) {
-		this.dashSize = dashSize;
 	}
 
 	@Override

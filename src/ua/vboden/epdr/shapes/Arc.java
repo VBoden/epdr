@@ -29,17 +29,15 @@ public class Arc extends Mesh {
 	}
 
 	public Arc(float x, float y, float z, float radius, float lineWidth, float startAngle, float angleSize) {
+		this(x, y, z, radius, lineWidth, startAngle, angleSize, CIRCLE_POINTS);
+	}
+
+	public Arc(float x, float y, float z, float radius, float lineWidth, float startAngle, float angleSize,
+			int circlePoints) {
 		this.startAngle = startAngle;
 		this.angleSize = angleSize;
+		this.circlePoints = circlePoints;
 		init(x, y, z, radius, lineWidth);
-	}
-
-	public Arc(float radius, float lineWidth) {
-		init(radius, lineWidth);
-	}
-
-	public Arc(float radius) {
-		init(radius, 0.1f);
 	}
 
 	protected void init(float radius, float lineWidth) {
