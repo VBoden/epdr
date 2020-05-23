@@ -1,5 +1,13 @@
 package ua.vboden.epdr.shapes;
 
+import static java.lang.Math.atan2;
+import static java.lang.Math.cos;
+import static java.lang.Math.round;
+import static java.lang.Math.sin;
+import static java.lang.Math.sqrt;
+import static java.lang.Math.toDegrees;
+import static java.lang.Math.toRadians;
+
 import java.io.IOException;
 
 import com.jme3.export.InputCapsule;
@@ -42,40 +50,19 @@ public class CenteredSquare extends Mesh {
 	}
 
 	protected void updateGeometry() {
-		float diagonal = (float) (Math.sqrt(height * height + width * width) / 2);
-		float startAngle = (float) Math.toDegrees(Math.atan2(width, height));
+		float halfDiagonal = (float) (sqrt(height * height + width * width) / 2);
+		float diagonalHalfAngle = (float) toDegrees(atan2(width, height));
 		float[] positions = new float[12];
-//		float angle = (float) Math.toRadians(-startAngle + rotationDegress);
-//		positions[0] = (float) (x + Math.round(Math.sin(angle) * diagonal * 100) / 100.0);
-//		positions[1] = y;
-//		positions[2] = (float) (z + Math.round(Math.cos(angle) * diagonal * 100) / 100.0);
-//		angle = (float) Math.toRadians(startAngle + rotationDegress);
-//		positions[3] = (float) (x + Math.round(Math.sin(angle) * diagonal * 10) / 10.0);
-//		positions[4] = y;
-//		positions[5] = (float) (z + Math.round(Math.cos(angle) * diagonal * 10) / 10.0);
-//		angle = (float) Math.toRadians(-startAngle + 180 + rotationDegress);
-//		positions[6] = (float) (x + Math.round(Math.sin(angle) * diagonal * 10) / 10.0);
-//		positions[7] = y;
-//		positions[8] = (float) (z + Math.round(Math.cos(angle) * diagonal * 10) / 10.0);
-//		angle = (float) Math.toRadians(startAngle + 180 + rotationDegress);
-//		positions[9] = (float) (x + Math.round(Math.sin(angle) * diagonal * 10) / 10.0);
-//		positions[10] = y;
-//		positions[11] = (float) (z + Math.round(Math.cos(angle) * diagonal * 10) / 10.0);
 
 		for (int i = 0; i < 4; i++) {
-			startAngle = -startAngle;
-			float angle = (float) Math.toRadians(startAngle + (i / 2 * 180) + rotationDegress);
-			positions[3 * i] = (float) (x + Math.round(Math.sin(angle) * diagonal * 100) / 100.0);
+			diagonalHalfAngle = -diagonalHalfAngle;
+			float angle = (float) toRadians(diagonalHalfAngle + (i / 2 * 180) + rotationDegress);
+			positions[3 * i] = (float) (x + round(sin(angle) * halfDiagonal * 100) / 100.0);
 			positions[3 * i + 1] = y;
-			positions[3 * i + 2] = (float) (z + Math.round(Math.cos(angle) * diagonal * 100) / 100.0);
+			positions[3 * i + 2] = (float) (z + round(cos(angle) * halfDiagonal * 100) / 100.0);
 		}
 
 		setBuffer(Type.Position, 3, positions);
-//		setBuffer(Type.Position, 3, new float[] { x - width / 2, y, z + height / 2, //
-//				x + width / 2, y, z + height / 2, //
-//				x + width / 2, y, z - height / 2, //
-//				x - width / 2, y, z - height / 2 });
-
 		setBuffer(Type.Normal, 3, new float[] { 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0 });
 		setBuffer(Type.Index, 3, new short[] { 0, 1, 2, 0, 2, 3 });
 		setBuffer(Type.TexCoord, 2, new float[] { 0, 0, 1, 0, 1, 1, 0, 1 });

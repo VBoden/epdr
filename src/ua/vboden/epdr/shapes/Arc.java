@@ -1,5 +1,9 @@
 package ua.vboden.epdr.shapes;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.toRadians;
+
 import java.io.IOException;
 
 import com.jme3.export.InputCapsule;
@@ -62,13 +66,13 @@ public class Arc extends Mesh {
 		float angleStep = (float) (angleSize / points);
 		float angle = startAngle;
 		for (int k = 0; k < points + 1; k++) {
-			float radians = (float) (angle * (Math.PI / 180.0));
-			coordinates[6 * k] = x + (float) (innerRadius * Math.cos(radians));
+			float radians = (float) toRadians(angle);
+			coordinates[6 * k] = x + (float) (innerRadius * cos(radians));
 			coordinates[6 * k + 1] = y;
-			coordinates[6 * k + 2] = z + (float) (innerRadius * Math.sin(radians));
-			coordinates[6 * k + 3] = x + (float) (radius * Math.cos(radians));
+			coordinates[6 * k + 2] = z + (float) (innerRadius * sin(radians));
+			coordinates[6 * k + 3] = x + (float) (radius * cos(radians));
 			coordinates[6 * k + 4] = y;
-			coordinates[6 * k + 5] = z + (float) (radius * Math.sin(radians));
+			coordinates[6 * k + 5] = z + (float) (radius * sin(radians));
 			i = addIndexes(k, indexes, i);
 			angle -= angleStep;
 		}
