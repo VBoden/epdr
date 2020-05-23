@@ -61,6 +61,8 @@ public class Arc extends Mesh {
 		int i = 0;
 		int points = (int) (circlePoints * angleSize / 360);
 		float[] coordinates = new float[6 * points + 6];
+		float[] normals = new float[6 * points + 6];
+		float[] textureCoords = new float[4 * points + 4];
 		short[] indexes = new short[getIndexesPerAngle() * (points + 1)];
 		float innerRadius = radius - lineWidth;
 		float angleStep = (float) (angleSize / points);
@@ -73,16 +75,44 @@ public class Arc extends Mesh {
 			coordinates[6 * k + 3] = x + (float) (radius * cos(radians));
 			coordinates[6 * k + 4] = y;
 			coordinates[6 * k + 5] = z + (float) (radius * sin(radians));
+			addTextureCoords(k, angle, textureCoords);
 			i = addIndexes(k, indexes, i);
+			addNormals(k, normals);
 			angle -= angleStep;
 		}
 
 		setBuffer(Type.Position, 3, coordinates);
 		setBuffer(Type.Index, 1, indexes);
+		setBuffer(Type.Normal, 3, normals);
+		setBuffer(Type.TexCoord, 2, textureCoords);
 
 		updateBound();
 		setStatic();
 		return this;
+	}
+
+	private void addTextureCoords(int k, float angle, float[] textureCoords) {
+		float angle2 = angle - startAngle;
+		while (angle2 < 0) {
+			angle2 += 360;
+		}
+		while (angle2 > 360) {
+			angle2 -= 360;
+		}
+		float coef = (radius - lineWidth) / radius;
+		textureCoords[4 * k] = (float) ((coef * Math.cos(Math.toRadians(angle2)) + 1) / 2.0);
+		textureCoords[4 * k + 1] = (float) ((coef * Math.sin(Math.toRadians(angle2)) + 1) / 2.0);
+		textureCoords[4 * k + 2] = (float) ((Math.cos(Math.toRadians(angle2)) + 1) / 2.0);
+		textureCoords[4 * k + 3] = (float) ((Math.sin(Math.toRadians(angle2)) + 1) / 2.0);
+	}
+
+	private void addNormals(int k, float[] normals) {
+		normals[6 * k] = 0;
+		normals[6 * k + 1] = 1;
+		normals[6 * k + 2] = 0;
+		normals[6 * k + 3] = 0;
+		normals[6 * k + 4] = 1;
+		normals[6 * k + 5] = 0;
 	}
 
 	protected Mode getShapeMode() {
