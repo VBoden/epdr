@@ -25,9 +25,6 @@ public class ArcFilled extends Mesh {
 	private float startAngle = 0;
 	private float angleSize = 90;
 
-	/**
-	 * Serialization only. Do not use.
-	 */
 	protected ArcFilled() {
 	}
 
@@ -51,11 +48,10 @@ public class ArcFilled extends Mesh {
 
 		int points = (int) (circlePoints * angleSize / 360);
 		float[] coordinates = new float[3 * points + 6];
+		float[] normals = new float[3 * points + 6];
+		float[] textureCoords = new float[2 * points + 4];
 		short[] indexes = new short[points + 2];
-		coordinates[0] = x;
-		coordinates[1] = y;
-		coordinates[2] = z;
-		indexes[0] = 0;
+		setupCenterParams(coordinates, normals, textureCoords, indexes);
 		float angleStep = (float) (angleSize / points);
 		float angle = startAngle;
 		for (int k = 1; k < points + 2; k++) {
@@ -63,15 +59,47 @@ public class ArcFilled extends Mesh {
 			coordinates[3 * k] = x + (float) (radius * cos(radians));
 			coordinates[3 * k + 1] = y;
 			coordinates[3 * k + 2] = z + (float) (radius * sin(radians));
+			addTextureCoords(k, angle, textureCoords);
 			indexes[k] = (short) (k);
+			addNormals(k, normals);
 			angle -= angleStep;
 		}
 
 		setBuffer(Type.Position, 3, coordinates);
 		setBuffer(Type.Index, 1, indexes);
+		setBuffer(Type.Normal, 3, normals);
+		setBuffer(Type.TexCoord, 2, textureCoords);
 
 		updateBound();
 		setStatic();
+	}
+
+	private void setupCenterParams(float[] coordinates, float[] normals, float[] textureCoords, short[] indexes) {
+		coordinates[0] = x;
+		coordinates[1] = y;
+		coordinates[2] = z;
+		textureCoords[0] = 0.5f;
+		textureCoords[1] = 0.5f;
+		addNormals(0, normals);
+		indexes[0] = 0;
+	}
+
+	private void addTextureCoords(int k, float angle, float[] textureCoords) {
+		float angle2 = angle - startAngle;
+		while (angle2 < 0) {
+			angle2 += 360;
+		}
+		while (angle2 > 360) {
+			angle2 -= 360;
+		}
+		textureCoords[2 * k] = (float) ((Math.cos(Math.toRadians(angle2)) + 1) / 2.0);
+		textureCoords[2 * k + 1] = (float) ((Math.sin(Math.toRadians(angle2)) + 1) / 2.0);
+	}
+
+	private void addNormals(int k, float[] normals) {
+		normals[3 * k] = 0;
+		normals[3 * k + 1] = 1;
+		normals[3 * k + 2] = 0;
 	}
 
 	protected void setCirclePoints(int circlePoints) {
